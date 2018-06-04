@@ -1,12 +1,12 @@
 {
 	"name": "#(service.name)",
 	"endpoints": [{
-		"path": "/v1/psone/hello",
+		"path": "/v1/psone/hello2",
 		"method": "GET",
 		"binary": true,
 		"redirect": {
 			"method": "GET",
-			"path": "/api/v1/psone/hello"
+			"path": "/api/v1/psone/hello2"
 		}
 	}, {
 		"path": "/v1/pstwo/hello",
@@ -15,6 +15,14 @@
 		"redirect": {
 			"method": "GET",
 			"path": "/api/v1/pstwo/hello"
+		}
+	}, {
+		"path": "/v1/fire-alerts/summary-stats",
+		"method": "GET",
+		"binary": true,
+		"redirect": {
+			"method": "GET",
+			"path": "/api/v1/fire-alerts/summary-stats"
 		}
 	}]
 }

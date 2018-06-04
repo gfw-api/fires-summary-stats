@@ -13,3 +13,15 @@ def serialize_greeting(greeting):
             'something': greeting.get('something', None),
         }
     }
+
+
+def serialize_response(greeting):
+    """."""
+    return {
+        'id': None,
+        'type': 'greeting',
+        'attributes': {
+            'period': greeting.get('period', None),
+            'iso': greeting.get('iso', None)
+        }
+    }
