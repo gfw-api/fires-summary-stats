@@ -26,8 +26,8 @@ class SummaryService(object):
                 df['fire_date_format'] = pd.to_datetime(df.fire_date, unit='ms')
 
                 if 'adm' in agg_by:
-                    groupby_list = [agg_by]
-                    grouped = df.groupby(groupby_list).sum()['fire_count'].reset_index()
+                    groupby_dict = {'adm1': ['adm1'], 'adm2': ['adm1', 'adm2']}
+                    grouped = df.groupby(groupby_dict[agg_by]).sum()['fire_count'].reset_index()
 
                 else:
                     # extract month and quarter values from datetime object

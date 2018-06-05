@@ -1,28 +1,32 @@
 {
 	"name": "#(service.name)",
-	"endpoints": [{
-		"path": "/v1/psone/hello2",
+	"endpoints": [
+		{
+			"path": "/v1/fire-alerts/summary-stats/:polyname/:iso",
+			"method": "GET",
+			"binary": true,
+			"redirect": {
+				"method": "GET",
+				"path": "/api/v1/fire-alerts/summary-stats/:polyname/:iso"
+			}
+		},
+		{
+		"path": "/v1/fire-alerts/summary-stats/:polyname/:iso/:adm1_code",
 		"method": "GET",
 		"binary": true,
 		"redirect": {
 			"method": "GET",
-			"path": "/api/v1/psone/hello2"
-		}
-	}, {
-		"path": "/v1/pstwo/hello",
+			"path": "/api/v1/fire-alerts/summary-stats/:polyname/:iso/:adm1_code"
+					}
+		},
+		{
+		"path": "/v1/fire-alerts/summary-stats/:polyname/:iso/:adm1_code/:adm2_code",
 		"method": "GET",
 		"binary": true,
 		"redirect": {
 			"method": "GET",
-			"path": "/api/v1/pstwo/hello"
+			"path": "/api/v1/fire-alerts/summary-stats/:polyname/:iso/:adm1_code/:adm2_code"
+					}
 		}
-	}, {
-		"path": "/v1/fire-alerts/summary-stats",
-		"method": "GET",
-		"binary": true,
-		"redirect": {
-			"method": "GET",
-			"path": "/api/v1/fire-alerts/summary-stats"
-		}
-	}]
+	]
 }
