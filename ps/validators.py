@@ -11,16 +11,6 @@ from functools import wraps
 from flask import request
 
 
-def validate_greeting(func):
-    """Validation"""
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if False:
-            return error(status=400, detail='Validating something in the middleware')
-        return func(*args, **kwargs)
-    return wrapper
-
-
 def validate_fires_period(func):
     """validate period argument"""
     @wraps(func)
@@ -82,7 +72,7 @@ def validate_agg(func):
             agg_values = eval(agg_values.title())
 
         if agg_values and agg_by:
-            agg_list = ['day', 'week', 'quarter', 'month', 'year', 'julian_day']
+            agg_list = ['day', 'week', 'quarter', 'month', 'year', 'julian_day', 'adm1', 'adm2']
 
             if agg_by.lower() not in agg_list:
                 return error(status=400, detail="aggregate_by parameter not "
@@ -91,6 +81,21 @@ def validate_agg(func):
         if agg_by and not agg_values:
             return error(status=400, detail="aggregate_values parameter must be "
                                             "true in order to aggregate data")
+
+        return func(*args, **kwargs)
+    return wrapper
+
+
+def validate_firetype(func):
+    """Validate fire type"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+
+        fire_type = request.args.get('fire_type')
+        if fire_type:
+            valid_fire_list = ['viirs', 'modis', 'all']
+            if fire_type.lower() not in valid_fire_list:
+                return error(status=400, detail='For this batch service, fire_type must one of {}'.format(', '.join(valid_fire_list)))
 
         return func(*args, **kwargs)
     return wrapper

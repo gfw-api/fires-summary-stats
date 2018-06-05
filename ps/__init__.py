@@ -7,7 +7,7 @@ import logging
 from flask import Flask
 from ps.config import SETTINGS
 from ps.routes.api import error
-from ps.routes.api.v1 import psone_endpoints, pstwo_endpoints, fires_endpoints
+from ps.routes.api.v1 import fires_endpoints
 from ps.utils.files import load_config_json
 import CTRegisterMicroserviceFlask
 
@@ -21,8 +21,6 @@ logging.basicConfig(
 app = Flask(__name__)
 
 # Routing
-app.register_blueprint(psone_endpoints, url_prefix='/api/v1/psone')
-app.register_blueprint(pstwo_endpoints, url_prefix='/api/v1/pstwo')
 app.register_blueprint(fires_endpoints, url_prefix='/api/v1/fire-alerts')
 
 # CT

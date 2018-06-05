@@ -8,39 +8,48 @@ class SummaryService(object):
     (day, week, month, year)"""
 
     @staticmethod
-    def create_time_table(dataset, data, agg_type):
+    def create_time_table(data, polyname, request, iso_code):
+
+        fire_type = request.args.get('fire_type', 'all')
+        agg_values = request.args.get('aggregate_values', False)
+        agg_by = request.args.get('aggregate_by', None)
 
         if not data['data']:
             return []
 
         else:
             df = pd.DataFrame(data['data'])
-            # df = df.rename(columns={'COUNT(*)': 'count'})
+            df = df.rename(columns={'SUM(fire_count)': 'fire_count'})
 
-            # standardize the output table to use julian_day
-            if dataset == 'terrai':
-                df = df.rename(columns={'day': 'julian_day'})
+            if agg_values:
+                # convert from unix to datetime
+                df['fire_date_format'] = pd.to_datetime(df.fire_date, unit='ms')
 
-            if agg_type == 'day':
-                agg_type = 'julian_day'
+                if 'adm' in agg_by:
+                    groupby_list = [agg_by]
+                    grouped = df.groupby(groupby_list).sum()['fire_count'].reset_index()
 
-            # create datetime column in pandas so we can use its datetime
-            # methods to easily summarize our results
-            df['fire_date_format'] = pd.to_datetime(df.fire_date, format='%Y/%m/%d')
+                else:
+                    # extract month and quarter values from datetime object
+                    df['year'] = df.fire_date_format.dt.year
+                    df['month'] = df.fire_date_format.dt.month
+                    df['quarter'] = df.fire_date_format.dt.quarter
+                    df['week'] = df.fire_date_format.dt.week
 
-            # extract month and quarter values from datetime object
-            df['year'] = df.fire_date_format.dt.year
-            df['month'] = df.fire_date_format.dt.month
-            df['quarter'] = df.fire_date_format.dt.quarter
-            df['week'] = df.fire_date_format.dt.week
+                    # start the list of columns to groupby
+                    groupby_list = ['year']
 
-            # start the list of columns to groupby
-            groupby_list = ['year']
+                    # return string formatted day value if day summary requested
+                    if agg_by != 'year':
+                        groupby_list.append(agg_by)
 
-            # return string formatted day value if day summary requested
-            if agg_type != 'year':
-                groupby_list.append(agg_type)
+                    grouped = df.groupby(groupby_list).sum()['fire_count'].reset_index()
 
-            grouped = df.groupby(groupby_list).sum()['fire_count'].reset_index()
+            else:
+                grouped = df
+
+            grouped['iso'] = iso_code
+            grouped['polyname'] = polyname
+            grouped['fire_type'] = fire_type.upper()
 
             return grouped.to_dict(orient='records')
