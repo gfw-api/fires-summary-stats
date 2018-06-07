@@ -51,6 +51,8 @@ spec:
                 secretKeyRef:
                   name: mssecrets
                   key: API_VERSION
+          - name: FIRES_DATASET_ID
+            value: 4145f642-5455-4414-b214-58ad39b83e1e
 
         ports:
           - containerPort: 5700

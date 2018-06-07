@@ -1,3 +1,4 @@
+import datetime
 """Serializers"""
 
 
@@ -15,13 +16,21 @@ def serialize_greeting(greeting):
     }
 
 
-def serialize_response(greeting):
-    """."""
+def serialize_response(request, fire_count_response, polyname):
+    """ return the fires stats in consistent format"""
+    today = datetime.datetime.today().strftime('%Y-%m-%d')
+    period = request.args.get('period', '2015-01-01,{}'.format(today))
     return {
-        'id': None,
-        'type': 'greeting',
-        'attributes': {
-            'period': greeting.get('period', None),
-            'iso': greeting.get('iso', None)
+        'data': {
+            'polyname' : polyname,
+            'aggregate_by': request.args.get('aggregate_by', None),
+            'aggregate_values': request.args.get('aggregate_values', None),
+            'period': period,
+            'fire_type': request.args.get('fire_type', None),
+            'attributes': {
+                'value':
+                    fire_count_response
+
+            }
         }
     }

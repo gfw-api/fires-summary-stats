@@ -12,6 +12,7 @@ class QueryConstructorService(object):
         # get parameters from query string
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         period = request.args.get('period', '2015-01-01,{}'.format(today))
+
         agg_values = request.args.get('aggregate_values', False)
         agg_by = request.args.get('aggregate_by', None)
         fire_type = request.args.get('fire_type', None)

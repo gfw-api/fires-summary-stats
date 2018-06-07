@@ -1,6 +1,7 @@
 """API ROUTER"""
 
 import logging
+import os
 import time
 
 from flask import jsonify, Blueprint, request
@@ -8,11 +9,12 @@ from ps.routes.api import error
 from ps.middleware import set_something
 from ps.serializers import serialize_response
 import json
-import CTRegisterMicroserviceFlask
+from CTRegisterMicroserviceFlask import request_to_microservice
 import requests
 
 from ps.validators import validate_fires_period, validate_agg, validate_firetype
 from ps.services import SummaryService, QueryConstructorService
+from ps.serializers import serialize_response
 
 fires_endpoints = Blueprint('fires_endpoints', __name__)
 
@@ -26,22 +28,33 @@ def summarize_data(polyname, iso_code, adm1_code=None, adm2_code=None):
     sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code, adm1_code, adm2_code)
     logging.info("SQL REQUEST: {}".format(sql))
 
-    api_url = "https://production-api.globalforestwatch.org/query/4145f642-5455-4414-b214-58ad39b83e1e?sql={}"
+    local_env = os.getenv('ENVIRONMENT')
+    if local_env == 'dev':
 
-    url = api_url.format(sql)
+        # can't seem to get GET requests working locally
+        # this will be much easier in proudction - should just be a GET
+        config = {
+          'uri': '/query/d48d2995-9bfe-46d1-bb13-ec1aa3ebdef6?sql={}'.format(sql),
+          'method': 'POST',
+          'body': {"dataset": {"tableName": "index_0ff00a71a6cd4313bc00c353f51318d1_1528308846698"}}
+        }
 
-    # send request to fires api
-    fstart = time.time()
-    r = requests.get(url)
-    data = r.json()
-    logging.info("TIME FOR API: {}".format(time.time() - fstart))
+    else:
+        dataset_id = os.getenv('FIRES_DATASET_ID')
+        config = {
+          'uri': '/query/{}?sql={}'.format(dataset_id, sql),
+          'method': 'GET',
+         }
 
+    data = request_to_microservice(config)
+        
     # aggregate data
-    pstart = time.time()
     agg_data = SummaryService.create_time_table(data, polyname, request, iso_code)
-    logging.info("TIME FOR PANDAS: {}".format(time.time() - pstart))
 
-    return agg_data
+    #serialize data
+    serialized_data = serialize_response(request, agg_data, polyname)
+
+    return serialized_data
 
 
 @fires_endpoints.route('/summary-stats/<polyname>/<iso_code>', methods=['GET'])
