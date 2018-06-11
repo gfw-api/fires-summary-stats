@@ -11,21 +11,19 @@ class QueryConstructorService(object):
 
         # get parameters from query string
         today = datetime.datetime.today().strftime('%Y-%m-%d')
-        period = request.args.get('period', '2015-01-01,{}'.format(today))
+        period = request.args.get('period', '2012-01-01,{}'.format(today))
 
         agg_values = request.args.get('aggregate_values', False)
         agg_by = request.args.get('aggregate_by', None)
         fire_type = request.args.get('fire_type', None)
 
-        dates = period.split(',')
-        start_date = dates[0].replace('-', '/')
-        end_date = dates[1].replace('-', '/')
+        start_date, end_date = period.split(',')
 
         groupby_sql = None
 
         # AGGREGATE VALUES
         if agg_values:
-            select_statement = "SELECT fire_date, sum(fire_count)"
+            select_statement = "SELECT alert_date, sum(alerts)"
 
             # by admin level
             if 'adm' in agg_by:
@@ -39,7 +37,7 @@ class QueryConstructorService(object):
                 sql = "{0} FROM data " \
                       "WHERE polyname = '{1}' AND " \
                       "iso = '{2}' AND " \
-                      "(fire_date >= '{3}' AND fire_date <= '{4}')".format(select_statement,
+                      "(alert_date >= '{3}' AND alert_date <= '{4}')".format(select_statement,
                                                                            polyname,
                                                                            iso_code,
                                                                            start_date, end_date)
@@ -49,17 +47,17 @@ class QueryConstructorService(object):
                 sql = "{0} FROM data " \
                       "WHERE polyname = '{1}' AND " \
                       "iso = '{2}' AND " \
-                      "(fire_date >= '{3}' AND fire_date <= '{4}')".format(select_statement,
+                      "(alert_date >= '{3}' AND alert_date <= '{4}')".format(select_statement,
                                                                            polyname,
                                                                            iso_code,
                                                                            start_date, end_date)
 
         # DON'T AGGREGATE VALUES
         else:
-            sql = "SELECT SUM(fire_count) FROM data " \
+            sql = "SELECT SUM(alerts) FROM data " \
                   "WHERE polyname = '{0}' AND " \
                   "iso = '{1}' AND " \
-                  "(fire_date >= '{2}' AND fire_date <= '{3}')".format(polyname,
+                  "(alert_date >= '{2}' AND alert_date <= '{3}')".format(polyname,
                                                                        iso_code,
                                                                        start_date, end_date)
 
@@ -74,8 +72,8 @@ class QueryConstructorService(object):
         # at the very end, add the GROUP BY statement
         if agg_values:
             if 'adm' in agg_by:
-                sql += "  GROUP BY {}, fire_date".format(groupby_sql)
+                sql += "  GROUP BY {}, alert_date".format(groupby_sql)
             else:
-                sql += " GROUP BY fire_date"
+                sql += " GROUP BY alert_date"
 
         return sql

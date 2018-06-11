@@ -34,9 +34,9 @@ def summarize_data(polyname, iso_code, adm1_code=None, adm2_code=None):
         # can't seem to get GET requests working locally
         # this will be much easier in proudction - should just be a GET
         config = {
-          'uri': '/query/d48d2995-9bfe-46d1-bb13-ec1aa3ebdef6?sql={}'.format(sql),
+          'uri': '/query/d1aed395-3918-4b0a-b025-684ef9863403?sql={}'.format(sql),
           'method': 'POST',
-          'body': {"dataset": {"tableName": "index_0ff00a71a6cd4313bc00c353f51318d1_1528308846698"}}
+          'body': {"dataset": {"tableName": "index_d1aed39539184b0ab025684ef9863403_1528744869921"}}
         }
 
     else:

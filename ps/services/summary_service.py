@@ -19,15 +19,16 @@ class SummaryService(object):
 
         else:
             df = pd.DataFrame(data['data'])
-            df = df.rename(columns={'SUM(fire_count)': 'fire_count'})
+            logging.info(df.head())
+            df = df.rename(columns={'SUM(alerts)': 'alerts'})
 
             if agg_values:
                 # convert from unix to datetime
-                df['fire_date_format'] = pd.to_datetime(df.fire_date, unit='ms')
+                df['fire_date_format'] = pd.to_datetime(df.alert_date, unit='ms')
 
                 if 'adm' in agg_by:
                     groupby_dict = {'adm1': ['adm1'], 'adm2': ['adm1', 'adm2']}
-                    grouped = df.groupby(groupby_dict[agg_by]).sum()['fire_count'].reset_index()
+                    grouped = df.groupby(groupby_dict[agg_by]).sum()['alerts'].reset_index()
 
                 else:
                     # extract month and quarter values from datetime object
@@ -43,7 +44,7 @@ class SummaryService(object):
                     if agg_by != 'year':
                         groupby_list.append(agg_by)
 
-                    grouped = df.groupby(groupby_list).sum()['fire_count'].reset_index()
+                    grouped = df.groupby(groupby_list).sum()['alerts'].reset_index()
 
             else:
                 grouped = df

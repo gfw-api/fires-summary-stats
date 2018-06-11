@@ -33,6 +33,9 @@ def validate_period(minYear):
             return error(status=400, detail="Period needs 2 arguments")
 
         else:
+            if '"' in period or "'" in period:
+                return error(status=400, detail="Incorrect format, should be YYYY-MM-DD,YYYY-MM-DD (no quotes)")
+
             period_from = period.split(',')[0]
             period_to = period.split(',')[1]
 

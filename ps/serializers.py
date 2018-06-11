@@ -26,7 +26,7 @@ def serialize_response(request, fire_count_response, polyname):
             'aggregate_by': request.args.get('aggregate_by', None),
             'aggregate_values': request.args.get('aggregate_values', None),
             'period': period,
-            'fire_type': request.args.get('fire_type', None),
+            'fire_type': request.args.get('fire_type', 'ALL'),
             'attributes': {
                 'value':
                     fire_count_response
