@@ -9,7 +9,7 @@ class QueryConstructorService(object):
     @staticmethod
     def format_dataset_query(request, polyname, iso_code, adm1_code=None, adm2_code=None):
 
-        # get parameters from query string
+        # get parameters from query string. If none specific, default is set
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         period = request.args.get('period', '2012-01-01,{}'.format(today))
 

@@ -5,10 +5,10 @@ import json
 import logging
 
 from flask import Flask
-from ps.config import SETTINGS
-from ps.routes.api import error
-from ps.routes.api.v1 import fires_endpoints
-from ps.utils.files import load_config_json
+from fireSummary.config import SETTINGS
+from fireSummary.routes.api import error
+from fireSummary.routes.api.v1 import fires_endpoints
+from fireSummary.utils.files import load_config_json
 import CTRegisterMicroserviceFlask
 
 logging.basicConfig(
@@ -28,7 +28,7 @@ info = load_config_json('register')
 swagger = load_config_json('swagger')
 CTRegisterMicroserviceFlask.register(
     app=app,
-    name='ps',
+    name='fireSummary',
     info=info,
     swagger=swagger,
     mode=CTRegisterMicroserviceFlask.AUTOREGISTER_MODE if os.getenv('CT_REGISTER_MODE') and os.getenv('CT_REGISTER_MODE') == 'auto' else CTRegisterMicroserviceFlask.NORMAL_MODE,

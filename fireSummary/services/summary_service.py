@@ -19,7 +19,6 @@ class SummaryService(object):
 
         else:
             df = pd.DataFrame(data['data'])
-            logging.info(df.head())
             df = df.rename(columns={'SUM(alerts)': 'alerts'})
 
             if agg_values:
@@ -36,6 +35,7 @@ class SummaryService(object):
                     df['month'] = df.fire_date_format.dt.month
                     df['quarter'] = df.fire_date_format.dt.quarter
                     df['week'] = df.fire_date_format.dt.week
+                    df['day'] = df.fire_date_format.dt.strftime('%Y-%m-%d')
 
                     # start the list of columns to groupby
                     groupby_list = ['year']
@@ -43,7 +43,6 @@ class SummaryService(object):
                     # return string formatted day value if day summary requested
                     if agg_by != 'year':
                         groupby_list.append(agg_by)
-
                     grouped = df.groupby(groupby_list).sum()['alerts'].reset_index()
 
             else:
@@ -52,5 +51,5 @@ class SummaryService(object):
             grouped['iso'] = iso_code
             grouped['polyname'] = polyname
             grouped['fire_type'] = fire_type.upper()
-
+            grouped.sort_values(by=groupby_list)
             return grouped.to_dict(orient='records')

@@ -1,15 +1,14 @@
 """VALIDATORS"""
 
-from functools import wraps
-
-from ps.routes.api import error
-
 import datetime
-import re
 
+from flask import jsonify, Blueprint, request
 from functools import wraps
-from flask import request
-
+from CTRegisterMicroserviceFlask import request_to_microservice
+from fireSummary.routes.api import error
+import logging
+import os
+from utils import util
 
 def validate_fires_period(func):
     """validate period argument"""
@@ -59,13 +58,15 @@ def validate_agg(func):
     """validate aggregate_by argument"""
     @wraps(func)
     def wrapper(*args, **kwargs):
-
+        agg_values = None
         if request.method == 'GET':
             agg_by = request.args.get('aggregate_by')
             agg_values = request.args.get('aggregate_values')
         elif request.method == 'POST':
             agg_by = request.get_json().get('aggregate_by', None) if request.get_json() else None
             agg_values = request.get_json().get('aggregate_values', None) if request.get_json() else None
+
+        agg_list = ['day', 'week', 'quarter', 'month', 'year', 'adm1', 'adm2']
 
         if agg_values:
             if agg_values.lower() not in ['true', 'false']:
@@ -75,7 +76,6 @@ def validate_agg(func):
             agg_values = eval(agg_values.title())
 
         if agg_values and agg_by:
-            agg_list = ['day', 'week', 'quarter', 'month', 'year', 'julian_day', 'adm1', 'adm2']
 
             if agg_by.lower() not in agg_list:
                 return error(status=400, detail="aggregate_by parameter not "
@@ -84,6 +84,10 @@ def validate_agg(func):
         if agg_by and not agg_values:
             return error(status=400, detail="aggregate_values parameter must be "
                                             "true in order to aggregate data")
+
+        if agg_values and not agg_by:
+            return error(status=400, detail="if aggregate_values is TRUE, aggregate_by parameter must be specified "
+                                            "as one of: {}".format(", ".join(agg_list)))
 
         return func(*args, **kwargs)
     return wrapper
@@ -99,6 +103,25 @@ def validate_firetype(func):
             valid_fire_list = ['viirs', 'modis', 'all']
             if fire_type.lower() not in valid_fire_list:
                 return error(status=400, detail='For this batch service, fire_type must one of {}'.format(', '.join(valid_fire_list)))
+
+        return func(*args, **kwargs)
+    return wrapper
+
+
+def validate_polyname(func):
+    """Validate fire type"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        polyname = request.view_args['polyname']
+
+        sql = "SELECT polyname from data GROUP BY polyname"
+        data = util.query_micoservice(sql)
+
+        valid_polyname_list = [x['polyname'] for x in data['data']]
+
+        if polyname.lower() not in valid_polyname_list:
+            return error(status=400, detail='For this batch service, polyname must one of: {}'
+                         .format(', '.join(valid_polyname_list)))
 
         return func(*args, **kwargs)
     return wrapper
