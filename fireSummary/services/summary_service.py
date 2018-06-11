@@ -44,6 +44,7 @@ class SummaryService(object):
                     if agg_by != 'year':
                         groupby_list.append(agg_by)
                     grouped = df.groupby(groupby_list).sum()['alerts'].reset_index()
+                    grouped.sort_values(by=groupby_list)
 
             else:
                 grouped = df
@@ -51,5 +52,5 @@ class SummaryService(object):
             grouped['iso'] = iso_code
             grouped['polyname'] = polyname
             grouped['fire_type'] = fire_type.upper()
-            grouped.sort_values(by=groupby_list)
+
             return grouped.to_dict(orient='records')
