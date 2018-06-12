@@ -1,7 +1,5 @@
-from flask import jsonify, request
-import os
 import datetime
-
+from flask import request
 
 class QueryConstructorService(object):
     """Class for formatting query and donwload sql"""
@@ -20,6 +18,8 @@ class QueryConstructorService(object):
         start_date, end_date = period.split(',')
 
         groupby_sql = None
+        if agg_by == 'day':
+            agg_by = 'alert_date'
 
         # AGGREGATE VALUES
         if agg_values:
@@ -31,6 +31,7 @@ class QueryConstructorService(object):
                 select_groupby_dict = {'adm1': 'adm1', 'adm2': 'adm1, adm2'}
 
                 # add adm1 or adm1, adm2 to select statement
+                select_statement += ', '
                 select_statement += select_groupby_dict[agg_by]
                 groupby_sql = select_groupby_dict[agg_by]
 
@@ -72,7 +73,7 @@ class QueryConstructorService(object):
         # at the very end, add the GROUP BY statement
         if agg_values:
             if 'adm' in agg_by:
-                sql += "  GROUP BY {}, alert_date".format(groupby_sql)
+                sql += " GROUP BY {}, alert_date".format(groupby_sql)
             else:
                 sql += " GROUP BY alert_date"
 

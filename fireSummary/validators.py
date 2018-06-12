@@ -109,7 +109,7 @@ def validate_firetype(func):
 
 
 def validate_polyname(func):
-    """Validate fire type"""
+    """Validate polyname"""
     @wraps(func)
     def wrapper(*args, **kwargs):
         polyname = request.view_args['polyname']
@@ -118,6 +118,7 @@ def validate_polyname(func):
         data = util.query_micoservice(sql)
 
         valid_polyname_list = [x['polyname'] for x in data['data']]
+        valid_polyname_list = ['admin' if x == 'gadm' else x for x in valid_polyname_list]
 
         if polyname.lower() not in valid_polyname_list:
             return error(status=400, detail='For this batch service, polyname must one of: {}'

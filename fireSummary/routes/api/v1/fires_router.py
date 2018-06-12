@@ -27,7 +27,7 @@ def summarize_data(polyname, iso_code, adm1_code=None, adm2_code=None):
 
     # construct sql query
     sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code, adm1_code, adm2_code)
-    logging.info("SQL REQUEST: {}".format(sql))
+    logging.info("\nSQL REQUEST: {}".format(sql))
 
     # get response from microservice
     data = util.query_micoservice(sql)
