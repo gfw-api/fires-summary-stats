@@ -1,5 +1,6 @@
 import unittest
 import json
+import logging
 from fireSummary import app
 import requests
 from httmock import all_requests, response, HTTMock
@@ -13,7 +14,7 @@ def response_content(url, request):
     return response(200, content, headers, None, 5, request)
 
 
-class BasicTest(unittest.TestCase):
+class ParamsTest(unittest.TestCase):
 
     def setUp(self):
         app.testing = True
@@ -23,9 +24,6 @@ class BasicTest(unittest.TestCase):
 
     def tearDown(self):
         pass
-
-    def deserialize_data(self, response):
-        return json.loads(response.data).get('data', None)
 
     def deserialize_error(self, response):
         return json.loads(response.data)['errors'][0]['detail']

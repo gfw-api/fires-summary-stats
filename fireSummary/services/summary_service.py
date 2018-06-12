@@ -22,14 +22,14 @@ class SummaryService(object):
             df = df.rename(columns={'SUM(alerts)': 'alerts'})
 
             if agg_values:
-                # convert from unix to datetime
-                df['fire_date_format'] = pd.to_datetime(df.alert_date, unit='ms')
-
                 if 'adm' in agg_by:
                     groupby_dict = {'adm1': ['adm1'], 'adm2': ['adm1', 'adm2']}
                     grouped = df.groupby(groupby_dict[agg_by]).sum()['alerts'].reset_index()
 
                 else:
+                    # convert from unix to datetime
+                    df['fire_date_format'] = pd.to_datetime(df.alert_date, unit='ms')
+
                     # extract month and quarter values from datetime object
                     df['year'] = df.fire_date_format.dt.year
                     df['month'] = df.fire_date_format.dt.month

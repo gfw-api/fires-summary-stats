@@ -23,15 +23,13 @@ class QueryConstructorService(object):
 
         # AGGREGATE VALUES
         if agg_values:
-            select_statement = "SELECT alert_date, sum(alerts)"
 
             # by admin level
             if 'adm' in agg_by:
-
-                select_groupby_dict = {'adm1': 'adm1', 'adm2': 'adm1, adm2'}
+                select_statement = "SELECT sum(alerts), "
 
                 # add adm1 or adm1, adm2 to select statement
-                select_statement += ', '
+                select_groupby_dict = {'adm1': 'adm1', 'adm2': 'adm1, adm2'}
                 select_statement += select_groupby_dict[agg_by]
                 groupby_sql = select_groupby_dict[agg_by]
 
@@ -45,6 +43,8 @@ class QueryConstructorService(object):
 
             # by time interval
             else:
+                select_statement = "SELECT alert_date, sum(alerts)"
+
                 sql = "{0} FROM data " \
                       "WHERE polyname = '{1}' AND " \
                       "iso = '{2}' AND " \
@@ -73,7 +73,7 @@ class QueryConstructorService(object):
         # at the very end, add the GROUP BY statement
         if agg_values:
             if 'adm' in agg_by:
-                sql += " GROUP BY {}, alert_date".format(groupby_sql)
+                sql += " GROUP BY " + groupby_sql
             else:
                 sql += " GROUP BY alert_date"
 
