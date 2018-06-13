@@ -9,9 +9,9 @@ def query_micoservice(sql):
         # can't seem to get GET requests working locally
         # this will be much easier in proudction - should just be a GET
         config = {
-            'uri': '/query/d1aed395-3918-4b0a-b025-684ef9863403?sql={}'.format(sql),
+            'uri': '/query/3267be92-733f-45e4-bf81-be5a2b33112c?sql={}'.format(sql),
             'method': 'POST',
-            'body': {"dataset": {"tableName": "index_d1aed39539184b0ab025684ef9863403_1528744869921"}}
+            'body': {"dataset": {"tableName": "index_3267be92733f45e4bf81be5a2b33112c_1528900401608"}}
         }
 
     else:

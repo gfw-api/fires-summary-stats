@@ -13,7 +13,7 @@ import json
 
 import requests
 
-from fireSummary.validators import validate_fires_period, validate_agg, validate_firetype, validate_polyname
+from fireSummary.validators import validate_args
 from fireSummary.services import SummaryService, QueryConstructorService
 from fireSummary.serializers import serialize_response
 
@@ -42,13 +42,11 @@ def summarize_data(polyname, iso_code, adm1_code=None, adm2_code=None):
     return serialized_data
 
 
+
 @fires_endpoints.route('/summary-stats/<polyname>/<iso_code>', methods=['GET'])
 @fires_endpoints.route('/summary-stats/<polyname>/<iso_code>/<adm1_code>', methods=['GET'])
 @fires_endpoints.route('/summary-stats/<polyname>/<iso_code>/<adm1_code>/<adm2_code>', methods=['GET'])
-@validate_fires_period
-@validate_agg
-@validate_firetype
-@validate_polyname
+@validate_args
 def fires_polyname_iso(polyname, iso_code, adm1_code=None, adm2_code=None, fire_type=None):
 
     logging.info('[ROUTER]: Running aoi level fires analysis')
