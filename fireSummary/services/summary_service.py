@@ -43,6 +43,7 @@ class SummaryService(object):
                     # return string formatted day value if day summary requested
                     if agg_by != 'year':
                         groupby_list.append(agg_by)
+                    logging.info("GROUPBY LIST: {}".format(groupby_list))
                     grouped = df.groupby(groupby_list).sum()['alerts'].reset_index()
                     grouped.sort_values(by=groupby_list)
 
@@ -52,5 +53,6 @@ class SummaryService(object):
             grouped['iso'] = iso_code
             grouped['polyname'] = polyname
             grouped['fire_type'] = fire_type.upper()
+
 
             return grouped.to_dict(orient='records')

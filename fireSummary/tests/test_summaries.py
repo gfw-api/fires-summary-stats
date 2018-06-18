@@ -53,6 +53,21 @@ def adm_mock(url, request):
     headers = {'content-type': 'application/json'}
     return response(200, content, headers, None, 5, request)
 
+
+@urlmatch(query=r'.*oil_palm.*UZB.*')
+def zero_values_mock(url, request):
+    logging.debug('[TEST]: Found URL that matched zero_values mock - mocking!')
+    headers = {'content-type': 'application/json'}
+
+    # this loads a cached response from this query to the production API:
+    # SELECT alert_date, sum(alerts) FROM data WHERE polyname = 'oil_palm' AND
+    # iso = 'UZB'
+    with open('fireSummary/tests/fixtures/no_fire_in_polyname.json') as src:
+        content = json.load(src)
+
+    return response(200, content, headers, None, 5, request)
+
+
 class SummaryTest(unittest.TestCase):
 
     def setUp(self):
@@ -77,11 +92,36 @@ class SummaryTest(unittest.TestCase):
 
                     return data
 
+    def test_zero_fires_groupby(self):
+        request = '/api/v1/fire-alerts/summary-stats/oil_palm/UZB?aggregate_values=True&aggregate_by=day'
+
+        with HTTMock(polyname_mock):
+            with HTTMock(zero_values_mock):
+                response = self.app.get(request, follow_redirects=True)
+                data = self.deserialize_data(response)
+
+        # check that we have 2344 days of data
+        self.assertEqual(len(data), 0)
+
+    def test_group_by_day(self):
+        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=day')
+
+        # check that we have 2344 days of data
+        self.assertEqual(len(data), 2344)
+
+        # and that the first row is correct
+        self.assertEqual(data[0]['alerts'], 129)
+        self.assertEqual(data[0]['day'], '2012-01-01')
+
+        # and the last
+        self.assertEqual(data[-1]['alerts'], 243)
+        self.assertEqual(data[-1]['day'], '2018-06-05')
+
     def test_group_by_week(self):
 
         data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=week')
 
-        # check that we have 337 weeks of data
+        # check that we have 337 weeks of data (grouped by year and week)
         self.assertEqual(len(data), 337)
 
         # and that the first row is correct
@@ -92,24 +132,10 @@ class SummaryTest(unittest.TestCase):
         self.assertEqual(data[-1]['alerts'], 485)
         self.assertEqual(data[-1]['week'], 23)
 
-    def test_group_by_year(self):
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=year')
-
-        # check that we have 337 weeks of data
-        self.assertEqual(len(data), 7)
-
-        # and that the first row is correct
-        self.assertEqual(data[0]['alerts'], 71932)
-        self.assertEqual(data[0]['year'], 2012)
-
-        # and the last
-        self.assertEqual(data[-1]['alerts'], 22871)
-        self.assertEqual(data[-1]['year'], 2018)
-
     def test_group_by_quarter(self):
         data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=quarter')
 
-        # check that we have 337 weeks of data
+        # check that we have 26 quarters of data (grouped by yer and quarter)
         self.assertEqual(len(data), 26)
 
         # and that the first row is correct
@@ -120,19 +146,34 @@ class SummaryTest(unittest.TestCase):
         self.assertEqual(data[-1]['alerts'], 8826)
         self.assertEqual(data[-1]['quarter'], 2)
 
-    def test_group_by_day(self):
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=day')
+    def test_group_by_month(self):
 
-        # check that we have 337 weeks of data
-        self.assertEqual(len(data), 2344)
+        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=month')
+
+        # check that we have 78 months of data (grouped by year and month)
+        self.assertEqual(len(data), 78)
 
         # and that the first row is correct
-        self.assertEqual(data[0]['alerts'], 129)
-        self.assertEqual(data[0]['day'], '2012-01-01')
+        self.assertEqual(data[0]['alerts'], 1474)
+        self.assertEqual(data[0]['month'], 1)
 
         # and the last
-        self.assertEqual(data[-1]['alerts'], 243)
-        self.assertEqual(data[-1]['day'], '2018-06-05')
+        self.assertEqual(data[-1]['alerts'], 1007)
+        self.assertEqual(data[-1]['month'], 6)
+
+    def test_group_by_year(self):
+        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=year')
+
+        # check that we have 7 years of data
+        self.assertEqual(len(data), 7)
+
+        # and that the first row is correct
+        self.assertEqual(data[0]['alerts'], 71932)
+        self.assertEqual(data[0]['year'], 2012)
+
+        # and the last
+        self.assertEqual(data[-1]['alerts'], 22871)
+        self.assertEqual(data[-1]['year'], 2018)
 
     def test_group_by_adm1(self):
 
@@ -153,7 +194,7 @@ class SummaryTest(unittest.TestCase):
 
         data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=adm2')
 
-        # check that we have 34 rows - one for each adm1 in IDN
+        # check that we have 436 rows - one for each adm2 in IDN
         self.assertEqual(len(data), 436)
 
         # and that the first row is correct

@@ -34,7 +34,7 @@ def summarize_data(polyname, iso_code, adm1_code=None, adm2_code=None):
 
     # aggregate data
     agg_data = SummaryService.create_time_table(data, polyname, request, iso_code)
-    logging.info(agg_data[0])
+    # logging.info(agg_data[0])
 
     # serialize data
     serialized_data = serialize_response(request, agg_data, polyname)
