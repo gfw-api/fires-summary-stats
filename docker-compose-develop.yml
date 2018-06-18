@@ -15,5 +15,5 @@ develop:
     API_VERSION: v1
   command: develop
   volumes:
-    - ./ps:/opt/ps/ps
+    - ./fireSummary:/opt/fireSummary/fireSummary
   restart: always

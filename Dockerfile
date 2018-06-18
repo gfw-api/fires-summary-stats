@@ -1,8 +1,8 @@
 FROM amancevice/pandas:0.20.3-python2-alpine
 MAINTAINER Sam Gibbes sgibbes@wri.org
 
-ENV NAME ps
-ENV USER ps
+ENV NAME fireSummary
+ENV USER fireSummary
 
 RUN apk update && apk upgrade && \
    apk add --no-cache --update bash git openssl-dev build-base alpine-sdk \

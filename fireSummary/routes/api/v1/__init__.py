@@ -1,4 +1,4 @@
-from ps.routes.api.v1.fires_router import fires_endpoints
+from fireSummary.routes.api.v1.fires_router import fires_endpoints
 from flask import jsonify
 
 # GENERIC Error
