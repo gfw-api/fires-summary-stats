@@ -1,16 +1,9 @@
 import unittest
 import json
-from fireSummary import app
-import requests
-from httmock import all_requests, response, HTTMock
 import datetime
-from fireSummary.services import QueryConstructorService
 
-@all_requests
-def response_content(url, request):
-    headers = {'content-type': 'application/json'}
-    content = {'data': 'any value'}
-    return response(200, content, headers, None, 5, request)
+from fireSummary import app
+from fireSummary.services import QueryConstructorService
 
 
 class DummyRequest(object):

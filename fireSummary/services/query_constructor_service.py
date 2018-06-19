@@ -1,5 +1,5 @@
 import datetime
-from flask import request
+
 
 class QueryConstructorService(object):
     """Class for formatting query and donwload sql"""
