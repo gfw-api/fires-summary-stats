@@ -1,4 +1,3 @@
-import json
 import sys
 
 from functools import wraps
@@ -15,6 +14,7 @@ def valid_input_boundaries(func):
 
 
 def test_valid_admin(poly_iso_adm1_adm2_combos, input_admin_combo):
+
     # create list of iso/adm1 & iso/adm1/adm2 combos
     valid_iso_adm1 = [x[1:3] for x in poly_iso_adm1_adm2_combos]
     valid_iso_adm1_adm2 = [x[1:4] for x in poly_iso_adm1_adm2_combos]
@@ -32,6 +32,7 @@ def test_valid_admin(poly_iso_adm1_adm2_combos, input_admin_combo):
 
 
 def test_bad_combo(polyname, iso_code, adm1_code=None, adm2_code=None):
+
     # get list of valid combos by reading in csv as json
     poly_iso_adm1_adm2_combos = util.load_valid_poly_iso()
 
