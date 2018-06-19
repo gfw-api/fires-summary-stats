@@ -51,6 +51,8 @@ class SummaryService(object):
                 grouped = df
 
             grouped['iso'] = iso_code
+
+
             grouped['polyname'] = polyname
             grouped['fire_type'] = fire_type.upper()
 

@@ -28,8 +28,11 @@ def summarize_data(polyname, iso_code, adm1_code=None, adm2_code=None, is_valid_
         data = util.query_micoservice(sql)
 
         # aggregate data
+        # now that actual querying is done, replace gadm28 with admin
+        if polyname == 'gadm28':
+            polyname = 'admin'
+
         agg_data = SummaryService.create_time_table(data, polyname, request, iso_code)
-        # logging.info(agg_data[0])
 
     else:
         agg_data = None

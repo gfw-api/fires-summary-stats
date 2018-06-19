@@ -1,7 +1,6 @@
 """The API MODULE"""
 
 import os
-import json
 import logging
 
 from flask import Flask
