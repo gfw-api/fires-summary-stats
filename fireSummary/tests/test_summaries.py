@@ -25,19 +25,6 @@ def year_mock(url, request):
 
     return response(200, content, headers, None, 5, request)
 
-# regex below used to matched "anything, then GROUP, then BY, then polyname, then anything"
-# important to note that this @urlmatch targets query parameters (query=) only
-# this is necessary to handle the request to check all polynames available to group by
-# currently done in validators.py
-@urlmatch(query=r'.*GROUP.*BY.*polyname.*')
-def polyname_mock(url, request):
-    logging.debug('[TEST]: Found URL that matched polyname_mock - mocking!')
-    with open('fireSummary/tests/fixtures/polyname_response.json') as src:
-        content = json.load(src)
-
-    headers = {'content-type': 'application/json'}
-    return response(200, content, headers, None, 5, request)
-
 # regex here to match GROUP BY adm1 or adm2
 @urlmatch(query=r'.*GROUP%20BY%20adm.*')
 def adm_mock(url, request):
@@ -51,20 +38,6 @@ def adm_mock(url, request):
         content = json.load(src)
 
     headers = {'content-type': 'application/json'}
-    return response(200, content, headers, None, 5, request)
-
-
-@urlmatch(query=r'.*oil_palm.*UZB.*')
-def zero_values_mock(url, request):
-    logging.debug('[TEST]: Found URL that matched zero_values mock - mocking!')
-    headers = {'content-type': 'application/json'}
-
-    # this loads a cached response from this query to the production API:
-    # SELECT alert_date, sum(alerts) FROM data WHERE polyname = 'oil_palm' AND
-    # iso = 'UZB'
-    with open('fireSummary/tests/fixtures/no_fire_in_polyname.json') as src:
-        content = json.load(src)
-
     return response(200, content, headers, None, 5, request)
 
 
@@ -84,24 +57,18 @@ class SummaryTest(unittest.TestCase):
 
     def make_request(self, request):
 
-        with HTTMock(polyname_mock):
-            with HTTMock(year_mock):
-                with HTTMock(adm_mock):
-                    response = self.app.get(request, follow_redirects=True)
-                    data = self.deserialize_data(response)
-
-                    return data
-
-    def test_zero_fires_groupby(self):
-        request = '/api/v1/fire-alerts/summary-stats/oil_palm/UZB?aggregate_values=True&aggregate_by=day'
-
-        with HTTMock(polyname_mock):
-            with HTTMock(zero_values_mock):
+        with HTTMock(year_mock):
+            with HTTMock(adm_mock):
                 response = self.app.get(request, follow_redirects=True)
                 data = self.deserialize_data(response)
 
+                return data
+
+    def test_zero_fires_groupby(self):
+        data = self.make_request('/api/v1/fire-alerts/summary-stats/oil_palm/UZB?aggregate_values=True&aggregate_by=day')
+
         # check that we have 2344 days of data
-        self.assertEqual(len(data), 0)
+        self.assertEqual(data, None)
 
     def test_group_by_day(self):
         data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=day')

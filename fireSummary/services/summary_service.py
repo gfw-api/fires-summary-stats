@@ -54,5 +54,4 @@ class SummaryService(object):
             grouped['polyname'] = polyname
             grouped['fire_type'] = fire_type.upper()
 
-
             return grouped.to_dict(orient='records')

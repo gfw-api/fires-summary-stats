@@ -14,13 +14,39 @@ def validate_args(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
+        # validate iso/adm1/adm2 combo
+        iso = request.view_args.get('iso_code', None)
+        adm1 = request.view_args.get('adm1_code', None)
+        adm2 = request.view_args.get('adm2_code', None)
+
+        input_combo = [iso, adm1, adm2]
+
+        # get rid of None's
+        input_combo = [x for x in input_combo if x is not None]
+
+        # create list of valid admin combos, based on input combo
+        input_len = len(input_combo) + 1
+
+        # read in all possible poly/iso/adm1/adm2 combos
+        poly_iso_adm1_adm2_combos = util.load_valid_poly_iso()
+        iso_adm1_adm2_combos = [x[1:input_len] for x in poly_iso_adm1_adm2_combos]
+
+        if input_combo not in iso_adm1_adm2_combos:
+            return error(status=400, detail='That combination of admin units (ISO, adm1, adm2) does not exist. Please'
+                                            ' consult the GADM dataset (https://gadm.org/) to determine '
+                                            'a valid combination')
+
         # validate polyname
         polyname = request.view_args['polyname']
 
-        sql = "SELECT polyname from data GROUP BY polyname"
-        data = util.query_micoservice(sql)
+        # get valid polynames from pre-calc stats
+        poly_iso_adm1_adm2_combos = util.load_valid_poly_iso()
+        valid_polyname_list = [x[0] for x in poly_iso_adm1_adm2_combos]
 
-        valid_polyname_list = [x['polyname'] for x in data['data']]
+        # group polynames
+        valid_polyname_list = list(set(valid_polyname_list))
+
+        # swap gadm for admin
         valid_polyname_list = ['admin' if 'gadm' in x else x for x in valid_polyname_list]
 
         if polyname.lower() not in valid_polyname_list:

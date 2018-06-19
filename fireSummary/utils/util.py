@@ -1,4 +1,6 @@
 import os
+import json
+
 from CTRegisterMicroserviceFlask import request_to_microservice
 
 
@@ -22,3 +24,8 @@ def query_micoservice(sql):
         }
 
     return request_to_microservice(config)
+
+
+def load_valid_poly_iso():
+    with open('fireSummary/data/gadm28.json') as thedata:
+        return json.load(thedata)

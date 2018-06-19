@@ -1,12 +1,8 @@
 import unittest
 import json
-import logging
-from fireSummary import app
-import requests
-from httmock import all_requests, response, HTTMock
 import datetime
 
-from test_summaries import polyname_mock
+from fireSummary import app
 
 
 class ParamsTest(unittest.TestCase):
@@ -25,13 +21,9 @@ class ParamsTest(unittest.TestCase):
 
     def make_request(self, request):
 
-        # need to mock this - every time we make a request to the app,
-        # we run the validators middleware
-        # this in turn makes a query to the API - so we need to mock
-        with HTTMock(polyname_mock):
-            response = self.app.get(request, follow_redirects=True)
-            error = self.deserialize_error(response)
-            status_code = response.status_code
+        response = self.app.get(request, follow_redirects=True)
+        error = self.deserialize_error(response)
+        status_code = response.status_code
 
         # and do our check to make sure the error code is correct here
         # that way we don't have to do it every time below
