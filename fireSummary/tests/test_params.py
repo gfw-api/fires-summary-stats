@@ -52,12 +52,12 @@ class ParamsTest(unittest.TestCase):
         self.assertEqual(error_text, "Incorrect format, should be YYYY-MM-DD,YYYY-MM-DD")
 
     def test_early_period(self):
-        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=2011-01-01,2016-01-01')
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=1999-01-01,2016-01-01')
 
-        self.assertEqual(error_text, "Start date can't be earlier than 2012-01-01")
+        self.assertEqual(error_text, "Start date can't be earlier than 2000-01-01")
 
     def test_late_period(self):
-        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=2013-01-01,2019-01-01')
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=2013-01-01,2025-01-01')
 
         today = datetime.datetime.now()
         self.assertEqual(error_text, "End year can't be later than {}".format(today.year))
