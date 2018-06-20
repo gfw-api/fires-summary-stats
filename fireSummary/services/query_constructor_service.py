@@ -9,7 +9,7 @@ class QueryConstructorService(object):
 
         # get parameters from query string. If none specific, default is set
         today = datetime.datetime.today().strftime('%Y-%m-%d')
-        period = request.args.get('period', '2012-01-01,{}'.format(today))
+        period = request.args.get('period', '2000-01-01,{}'.format(today))
 
         agg_values = request.args.get('aggregate_values', False)
         agg_by = request.args.get('aggregate_by', None)
