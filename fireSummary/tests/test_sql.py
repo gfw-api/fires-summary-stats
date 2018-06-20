@@ -64,7 +64,7 @@ class SQLTest(unittest.TestCase):
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT SUM(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
-                      "(alert_date >= '2012-01-01' AND alert_date <= '{}')".format(today)
+                      "(alert_date >= '2000-01-01' AND alert_date <= '{}')".format(today)
 
         self.assertEqual(sql, correct_sql)
 
@@ -78,7 +78,7 @@ class SQLTest(unittest.TestCase):
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT alert_date, sum(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
-                      "(alert_date >= '2012-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(today)
+                      "(alert_date >= '2000-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(today)
 
         self.assertEqual(sql, correct_sql)
 
@@ -92,7 +92,7 @@ class SQLTest(unittest.TestCase):
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT alert_date, sum(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
-                      "(alert_date >= '2012-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(today)
+                      "(alert_date >= '2000-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(today)
 
         self.assertEqual(sql, correct_sql)
 
@@ -106,7 +106,7 @@ class SQLTest(unittest.TestCase):
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT alert_date, sum(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
-                      "(alert_date >= '2012-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(today)
+                      "(alert_date >= '2000-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(today)
         print correct_sql
         self.assertEqual(sql, correct_sql)
 
@@ -120,7 +120,7 @@ class SQLTest(unittest.TestCase):
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT alert_date, sum(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
-                      "(alert_date >= '2012-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(today)
+                      "(alert_date >= '2000-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(today)
         print correct_sql
         self.assertEqual(sql, correct_sql)
 
@@ -134,7 +134,7 @@ class SQLTest(unittest.TestCase):
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT sum(alerts), adm1 FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
-                      "(alert_date >= '2012-01-01' AND alert_date <= '{}') GROUP BY adm1".format(today)
+                      "(alert_date >= '2000-01-01' AND alert_date <= '{}') GROUP BY adm1".format(today)
 
         self.assertEqual(sql, correct_sql)
 
@@ -148,7 +148,7 @@ class SQLTest(unittest.TestCase):
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT sum(alerts), adm1, adm2 FROM data WHERE polyname = 'admin' AND iso = 'IDN' " \
-                      "AND (alert_date >= '2012-01-01' AND alert_date <= '{}') " \
+                      "AND (alert_date >= '2000-01-01' AND alert_date <= '{}') " \
                       "GROUP BY adm1, adm2".format(today)
 
         self.assertEqual(sql, correct_sql)
@@ -163,6 +163,6 @@ class SQLTest(unittest.TestCase):
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT SUM(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
-                      "(alert_date >= '2012-01-01' AND alert_date <= '{}') and fire_type = 'MODIS'".format(today)
+                      "(alert_date >= '2000-01-01' AND alert_date <= '{}') and fire_type = 'MODIS'".format(today)
         print correct_sql
         self.assertEqual(sql, correct_sql)
