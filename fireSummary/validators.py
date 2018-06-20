@@ -97,7 +97,7 @@ def validate_args(func):
         # validate period
         today = datetime.datetime.now()
         period = request.args.get('period', None)
-        minYear = 2012
+        minYear = 2000
         if period:
             if len(period.split(',')) < 2:
                 return error(status=400, detail="Period needs 2 arguments")

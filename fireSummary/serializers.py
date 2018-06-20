@@ -19,7 +19,7 @@ def serialize_greeting(greeting):
 def serialize_response(request, fire_count_response, polyname):
     """ return the fires stats in consistent format"""
     today = datetime.datetime.today().strftime('%Y-%m-%d')
-    period = request.args.get('period', '2012-01-01,{}'.format(today))
+    period = request.args.get('period', '2000-01-01,{}'.format(today))
     return {
         'data': {
             'polyname' : polyname,
