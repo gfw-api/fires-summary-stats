@@ -65,9 +65,9 @@ class SummaryTest(unittest.TestCase):
                 return data
 
     def test_zero_fires_groupby(self):
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/oil_palm/UZB?aggregate_values=True&aggregate_by=day')
+        data = self.make_request('/api/v1/fire-alerts/summary-stats/mining/USA?aggregate_values=True&aggregate_by=day')
 
-        # check that we have 2344 days of data
+        # check that we return Null instead of 0 - this poly/iso combo doesn't exist
         self.assertEqual(data, None)
 
     def test_group_by_day(self):

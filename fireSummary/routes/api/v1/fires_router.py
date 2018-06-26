@@ -49,6 +49,4 @@ def summarize_data(polyname, iso_code, adm1_code=None, adm2_code=None, is_valid_
 @validate_args
 def fires_polyname_iso(polyname, iso_code, adm1_code=None, adm2_code=None):
 
-    logging.info('[ROUTER]: Running aoi level fires analysis')
-
     return jsonify(summarize_data(polyname, iso_code, adm1_code, adm2_code))

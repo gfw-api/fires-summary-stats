@@ -40,7 +40,6 @@ def validate_args(func):
         polyname = request.view_args['polyname']
 
         # get valid polynames from pre-calc stats
-        poly_iso_adm1_adm2_combos = util.load_valid_poly_iso()
         valid_polyname_list = [x[0] for x in poly_iso_adm1_adm2_combos]
 
         # group polynames
@@ -53,6 +52,9 @@ def validate_args(func):
             return error(status=400, detail='For this batch service, polyname must one of: {}'
                          .format(', '.join(valid_polyname_list)))
 
+        # validate polyname/iso/adm1/adm2
+        #
+
         # validate firetype
         fire_type = request.args.get('fire_type')
         if fire_type:
@@ -61,15 +63,8 @@ def validate_args(func):
                 return error(status=400, detail='For this batch service, fire_type must one of {}'.format(', '.join(valid_fire_list)))
 
         # validate aggregate
-        agg_values = None
-        logging.info("REQUEST METHOD: ".format(request.method))
-        if request.method == 'GET':
-            agg_by = request.args.get('aggregate_by')
-            agg_values = request.args.get('aggregate_values')
-
-        elif request.method == 'POST':
-            agg_by = request.get_json().get('aggregate_by', None) if request.get_json() else None
-            agg_values = request.get_json().get('aggregate_values', None) if request.get_json() else None
+        agg_by = request.args.get('aggregate_by')
+        agg_values = request.args.get('aggregate_values')
 
         agg_list = ['day', 'week', 'quarter', 'month', 'year', 'adm1', 'adm2']
 
