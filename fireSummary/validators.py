@@ -93,8 +93,10 @@ def validate_args(func):
                     return error(status=400,
                                  detail="if requesting globally summarized statistics, "
                                         "aggregate_by must be specified as one of {}".format(", ".join(global_valid_agg_list)))
-            if agg_by.lower() not in agg_list:
-                return error(status=400, detail="aggregate_by must be specified as one of: {} ".format(", ".join(agg_list)))
+
+            else:
+                if agg_by.lower() not in agg_list:
+                    return error(status=400, detail="aggregate_by must be specified as one of: {} ".format(", ".join(agg_list)))
 
         if agg_by and not agg_values:
             return error(status=400, detail="aggregate_values parameter must be "
