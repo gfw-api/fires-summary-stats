@@ -54,7 +54,7 @@ class ParamsTest(unittest.TestCase):
     def test_early_period(self):
         error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=1999-01-01,2016-01-01')
 
-        self.assertEqual(error_text, "Start date can't be earlier than 2000-01-01")
+        self.assertEqual(error_text, "Start date can't be earlier than 2001-01-01")
 
     def test_late_period(self):
         error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=2013-01-01,2025-01-01')
@@ -62,3 +62,12 @@ class ParamsTest(unittest.TestCase):
         today = datetime.datetime.now()
         self.assertEqual(error_text, "End year can't be later than {}".format(today.year))
 
+    def test_bad_global(self):
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/wdpa/global/1')
+        self.assertEqual(error_text, "if requesting globally summarized statistics, you cannot choose additional "
+                                     "administrative units.")
+
+    def test_bad_global_agg(self):
+        agg_list = ['day', 'week', 'quarter', 'month', 'year', 'iso']
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/wdpa/global?aggregate_values=True&aggregate_by=adm1')
+        self.assertEqual(error_text, "aggregate_by must be specified as one of: {} ".format(", ".join(agg_list)))

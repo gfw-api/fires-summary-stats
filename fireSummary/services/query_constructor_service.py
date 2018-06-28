@@ -9,7 +9,7 @@ class QueryConstructorService(object):
 
         # get parameters from query string. If none specific, default is set
         today = datetime.datetime.today().strftime('%Y-%m-%d')
-        period = request.args.get('period', '2000-01-01,{}'.format(today))
+        period = request.args.get('period', '2001-01-01,{}'.format(today))
 
         agg_values = request.args.get('aggregate_values', False)
         agg_by = request.args.get('aggregate_by', None)
@@ -21,46 +21,63 @@ class QueryConstructorService(object):
         if agg_by == 'day':
             agg_by = 'alert_date'
 
+        select_statement = "SELECT SUM(alerts)"
+        where_statement = "WHERE polyname = '{}' AND ".format(polyname)
+
         # AGGREGATE VALUES
         if agg_values:
-
             # by admin level
-            if 'adm' in agg_by:
-                select_statement = "SELECT sum(alerts), "
+            if agg_by in ['adm1', 'adm2', 'iso']:
 
                 # add adm1 or adm1, adm2 to select statement
-                select_groupby_dict = {'adm1': 'adm1', 'adm2': 'adm1, adm2'}
+                select_groupby_dict = {'iso': ', iso', 'adm1': ', adm1', 'adm2': ', adm1, adm2'}
+
                 select_statement += select_groupby_dict[agg_by]
-                groupby_sql = select_groupby_dict[agg_by]
+
+                groupby_sql = select_groupby_dict[agg_by].strip(', ')
+
+                # if summing by admin, add this to where statement
+                if not iso_code == 'global':
+                    where_statement += "iso = '{}' AND ".format(iso_code)
 
                 sql = "{0} FROM data " \
-                      "WHERE polyname = '{1}' AND " \
-                      "iso = '{2}' AND " \
-                      "(alert_date >= '{3}' AND alert_date <= '{4}')".format(select_statement,
-                                                                           polyname,
-                                                                           iso_code,
-                                                                           start_date, end_date)
+                      "{1}" \
+                      "(alert_date >= '{2}' AND alert_date <= '{3}')".format(select_statement,
+                                                                             where_statement,
+                                                                             start_date, end_date)
 
             # by time interval
             else:
-                select_statement = "SELECT alert_date, sum(alerts)"
+
+                select_statement += ", alert_date"
+
+                # if summing by admin, add this to where statement
+                if not iso_code == 'global':
+                    where_statement += "iso = '{}' AND ".format(iso_code)
 
                 sql = "{0} FROM data " \
-                      "WHERE polyname = '{1}' AND " \
-                      "iso = '{2}' AND " \
-                      "(alert_date >= '{3}' AND alert_date <= '{4}')".format(select_statement,
-                                                                           polyname,
-                                                                           iso_code,
-                                                                           start_date, end_date)
+                      "{1}" \
+                      "(alert_date >= '{2}' AND alert_date <= '{3}')".format(select_statement,
+                                                                             where_statement,
+                                                                             start_date, end_date)
 
         # DON'T AGGREGATE VALUES
         else:
-            sql = "SELECT SUM(alerts) FROM data " \
-                  "WHERE polyname = '{0}' AND " \
-                  "iso = '{1}' AND " \
-                  "(alert_date >= '{2}' AND alert_date <= '{3}')".format(polyname,
-                                                                       iso_code,
-                                                                       start_date, end_date)
+            print "DONT AGG VALUES"
+
+            # if summing globally, not by admin:
+            where_statement = "WHERE polyname = '{}' AND ".format(polyname)
+
+            # if summing by admin, add this to where statement
+            if not iso_code == 'global':
+                where_statement += "iso = '{}' AND ".format(iso_code)
+
+            sql = "{0} FROM data " \
+                  "{1}" \
+                  "(alert_date >= '{3}' AND alert_date <= '{4}')".format(select_statement,
+                                                                         where_statement,
+                                                                         iso_code,
+                                                                         start_date, end_date)
 
         # add the select query for admin levels
         if adm1_code:
@@ -72,7 +89,7 @@ class QueryConstructorService(object):
 
         # at the very end, add the GROUP BY statement
         if agg_values:
-            if 'adm' in agg_by:
+            if agg_by in ['adm1', 'adm2', 'iso']:
                 sql += " GROUP BY " + groupby_sql
             else:
                 sql += " GROUP BY alert_date"

@@ -31,7 +31,11 @@ def validate_args(func):
         poly_iso_adm1_adm2_combos = util.load_valid_poly_iso()
         iso_adm1_adm2_combos = [x[1:input_len] for x in poly_iso_adm1_adm2_combos]
 
-        if input_combo not in iso_adm1_adm2_combos:
+        if len(input_combo) > 1 and input_combo[0] == 'global':
+            return error(status=400, detail="if requesting globally summarized statistics, you cannot choose "
+                                            "additional administrative units.")
+
+        if input_combo[0] != 'global' and input_combo not in iso_adm1_adm2_combos:
             return error(status=400, detail='That combination of admin units (ISO, adm1, adm2) does not exist. Please'
                                             ' consult the GADM dataset (https://gadm.org/) to determine '
                                             'a valid combination')
@@ -40,7 +44,6 @@ def validate_args(func):
         polyname = request.view_args['polyname']
 
         # get valid polynames from pre-calc stats
-        poly_iso_adm1_adm2_combos = util.load_valid_poly_iso()
         valid_polyname_list = [x[0] for x in poly_iso_adm1_adm2_combos]
 
         # group polynames
@@ -61,43 +64,41 @@ def validate_args(func):
                 return error(status=400, detail='For this batch service, fire_type must one of {}'.format(', '.join(valid_fire_list)))
 
         # validate aggregate
-        agg_values = None
-        logging.info("REQUEST METHOD: ".format(request.method))
-        if request.method == 'GET':
-            agg_by = request.args.get('aggregate_by')
-            agg_values = request.args.get('aggregate_values')
-
-        elif request.method == 'POST':
-            agg_by = request.get_json().get('aggregate_by', None) if request.get_json() else None
-            agg_values = request.get_json().get('aggregate_values', None) if request.get_json() else None
+        agg_by = request.args.get('aggregate_by')
+        agg_values = request.args.get('aggregate_values')
 
         agg_list = ['day', 'week', 'quarter', 'month', 'year', 'adm1', 'adm2']
 
+        if iso == 'global':
+            agg_list = [x for x in agg_list if x not in ['adm1', 'adm2']]
+            agg_list.append('iso')
+
         if agg_values:
             if agg_values.lower() not in ['true', 'false']:
-                return error(status=400, detail="aggregate_values parameter not "
+                return error(status=400, detail="aggregate_values parameter "
                                                 "must be either true or false")
 
             agg_values = eval(agg_values.title())
 
+        # validate aggregating with global summary
         if agg_values and agg_by:
 
             if agg_by.lower() not in agg_list:
                 return error(status=400, detail="aggregate_by must be specified as one of: {} ".format(", ".join(agg_list)))
 
-        if agg_by and not agg_values:
-            return error(status=400, detail="aggregate_values parameter must be "
-                                            "true in order to aggregate data")
+            if agg_by and not agg_values:
+                return error(status=400, detail="aggregate_values parameter must be "
+                                                "true in order to aggregate data")
 
-        if agg_values and not agg_by:
+            if agg_values and not agg_by:
 
-            return error(status=400, detail="if aggregate_values is TRUE, aggregate_by parameter must be specified "
-                                            "as one of: {}".format(", ".join(agg_list)))
+                return error(status=400, detail="if aggregate_values is TRUE, aggregate_by parameter must be specified "
+                                                "as one of: {}".format(", ".join(agg_list)))
 
         # validate period
         today = datetime.datetime.now()
         period = request.args.get('period', None)
-        minYear = 2000
+        minYear = 2001
         if period:
             if len(period.split(',')) < 2:
                 return error(status=400, detail="Period needs 2 arguments")
