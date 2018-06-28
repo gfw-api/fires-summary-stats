@@ -77,7 +77,7 @@ class SQLTest(unittest.TestCase):
         sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
-        correct_sql = "SELECT alert_date, sum(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
+        correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2000-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(today)
 
         self.assertEqual(sql, correct_sql)
@@ -91,7 +91,7 @@ class SQLTest(unittest.TestCase):
         sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
-        correct_sql = "SELECT alert_date, sum(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
+        correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2000-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(today)
 
         self.assertEqual(sql, correct_sql)
@@ -105,7 +105,7 @@ class SQLTest(unittest.TestCase):
         sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
-        correct_sql = "SELECT alert_date, sum(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
+        correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2000-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(today)
         print correct_sql
         self.assertEqual(sql, correct_sql)
@@ -119,7 +119,7 @@ class SQLTest(unittest.TestCase):
         sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
-        correct_sql = "SELECT alert_date, sum(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
+        correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2000-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(today)
         print correct_sql
         self.assertEqual(sql, correct_sql)
@@ -133,7 +133,7 @@ class SQLTest(unittest.TestCase):
         sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
-        correct_sql = "SELECT sum(alerts), adm1 FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
+        correct_sql = "SELECT SUM(alerts), adm1 FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2000-01-01' AND alert_date <= '{}') GROUP BY adm1".format(today)
 
         self.assertEqual(sql, correct_sql)
@@ -147,7 +147,7 @@ class SQLTest(unittest.TestCase):
         sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
-        correct_sql = "SELECT sum(alerts), adm1, adm2 FROM data WHERE polyname = 'admin' AND iso = 'IDN' " \
+        correct_sql = "SELECT SUM(alerts), adm1, adm2 FROM data WHERE polyname = 'admin' AND iso = 'IDN' " \
                       "AND (alert_date >= '2000-01-01' AND alert_date <= '{}') " \
                       "GROUP BY adm1, adm2".format(today)
 
@@ -166,3 +166,23 @@ class SQLTest(unittest.TestCase):
                       "(alert_date >= '2000-01-01' AND alert_date <= '{}') and fire_type = 'MODIS'".format(today)
         print correct_sql
         self.assertEqual(sql, correct_sql)
+
+    def test_sql_global(self):
+        request = DummyRequest(None, None, 'modis')
+
+        polyname = 'admin'
+        iso_code = 'global'
+
+        sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
+
+        today = datetime.datetime.today().strftime('%Y-%m-%d')
+        correct_sql = "SELECT SUM(alerts) FROM data WHERE polyname = 'admin' AND " \
+                      "(alert_date >= '2000-01-01' AND alert_date <= '{}') and fire_type = 'MODIS'".format(today)
+        print correct_sql
+        self.assertEqual(sql, correct_sql)
+
+
+# make sql test- params, sql
+# if global, make sure can't add iso admin1, adm2. if global, let them group by iso
+
+# add validations

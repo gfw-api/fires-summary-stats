@@ -62,3 +62,7 @@ class ParamsTest(unittest.TestCase):
         today = datetime.datetime.now()
         self.assertEqual(error_text, "End year can't be later than {}".format(today.year))
 
+    def test_bad_global(self):
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/wdpa/global/1')
+        self.assertEqual(error_text, "if requesting globally summarized statistics, you cannot choose additional "
+                                     "administrative units.")

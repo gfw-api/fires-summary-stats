@@ -31,7 +31,11 @@ def validate_args(func):
         poly_iso_adm1_adm2_combos = util.load_valid_poly_iso()
         iso_adm1_adm2_combos = [x[1:input_len] for x in poly_iso_adm1_adm2_combos]
 
-        if input_combo not in iso_adm1_adm2_combos:
+        if len(input_combo) > 1 and input_combo[0] == 'global':
+            return error(status=400, detail="if requesting globally summarized statistics, you cannot choose "
+                                            "additional administrative units.")
+
+        if input_combo[0] != 'global' and input_combo not in iso_adm1_adm2_combos:
             return error(status=400, detail='That combination of admin units (ISO, adm1, adm2) does not exist. Please'
                                             ' consult the GADM dataset (https://gadm.org/) to determine '
                                             'a valid combination')
@@ -52,8 +56,11 @@ def validate_args(func):
             return error(status=400, detail='For this batch service, polyname must one of: {}'
                          .format(', '.join(valid_polyname_list)))
 
-        # validate polyname/iso/adm1/adm2
-        #
+        # # validate global summary
+        # if input_combo[0].lower() == 'global' and len(input_combo) > 1:
+        #     return error(status=400,
+        #                  detail="if requesting globally summarized statistics, you cannot choose additional "
+        #                         "administrative units.")
 
         # validate firetype
         fire_type = request.args.get('fire_type')
@@ -75,8 +82,17 @@ def validate_args(func):
 
             agg_values = eval(agg_values.title())
 
+        # validate aggregating with global summary
         if agg_values and agg_by:
 
+            if iso == 'global':
+                # make a valid global list by removing adm1, adm2 and adding iso as agg by options
+                global_valid_agg_list = [x for x in agg_list if x not in ['adm1', 'adm2']]
+                global_valid_agg_list.append('iso')
+                if agg_by.lower() not in global_valid_agg_list:
+                    return error(status=400,
+                                 detail="if requesting globally summarized statistics, "
+                                        "aggregate_by must be specified as one of {}".format(", ".join(global_valid_agg_list)))
             if agg_by.lower() not in agg_list:
                 return error(status=400, detail="aggregate_by must be specified as one of: {} ".format(", ".join(agg_list)))
 
