@@ -63,7 +63,6 @@ class QueryConstructorService(object):
 
         # DON'T AGGREGATE VALUES
         else:
-            print "DONT AGG VALUES"
 
             # if summing globally, not by admin:
             where_statement = "WHERE polyname = '{}' AND ".format(polyname)
