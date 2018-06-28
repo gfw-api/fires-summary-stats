@@ -13,7 +13,7 @@ class DummyRequest(object):
         self.args['period'] = period
         self.args['aggregate_by'] = aggregate_by
         self.args['fire_type'] = fire_type
-
+        self.today = datetime.datetime.today().strftime('%Y-%m-%d')
         if self.args['aggregate_by']:
             self.args['aggregate_values'] = True
 
@@ -168,7 +168,7 @@ class SQLTest(unittest.TestCase):
         self.assertEqual(sql, correct_sql)
 
     def test_sql_global(self):
-        request = DummyRequest(None, None, 'modis')
+        request = DummyRequest(None, 'global', None)
 
         polyname = 'admin'
         iso_code = 'global'
@@ -176,8 +176,7 @@ class SQLTest(unittest.TestCase):
         sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
-        correct_sql = "SELECT SUM(alerts) FROM data WHERE polyname = 'admin' AND " \
-                      "(alert_date >= '2001-01-01' AND alert_date <= '{}') and fire_type = 'MODIS'".format(today)
+        correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND " \
+                      "(alert_date >= '2001-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(today)
         print correct_sql
         self.assertEqual(sql, correct_sql)
-

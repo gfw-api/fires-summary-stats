@@ -22,8 +22,8 @@ class SummaryService(object):
             df = df.rename(columns={'SUM(alerts)': 'alerts'})
 
             if agg_values:
-                if 'adm' in agg_by:
-                    groupby_dict = {'adm1': ['adm1'], 'adm2': ['adm1', 'adm2']}
+                if agg_by in ['adm1', 'adm2', 'iso']:
+                    groupby_dict = {'iso': ['iso'], 'adm1': ['adm1'], 'adm2': ['adm1', 'adm2']}
                     grouped = df.groupby(groupby_dict[agg_by]).sum()['alerts'].reset_index()
 
                 else:
@@ -46,11 +46,13 @@ class SummaryService(object):
                     logging.info("GROUPBY LIST: {}".format(groupby_list))
                     grouped = df.groupby(groupby_list).sum()['alerts'].reset_index()
                     grouped.sort_values(by=groupby_list)
+                    grouped['iso'] = iso_code
 
             else:
                 grouped = df
 
-            grouped['iso'] = iso_code
+            if iso_code != 'global':
+                grouped['iso'] = iso_code
             grouped['polyname'] = polyname
             grouped['fire_type'] = fire_type.upper()
 
