@@ -7,11 +7,9 @@ class QueryConstructorService(object):
     @staticmethod
     def format_dataset_query(request, polyname, iso_code, adm1_code=None, adm2_code=None):
 
-        # polyname/IDN/1/1?period='    '&agg_values=True&agg_by=<adm1, adm2, week, month, period, year>
-        # polyname/global/1/1?period='    '&agg_values=True&agg_by=<adm1, adm2, week, month, period, year>
         # get parameters from query string. If none specific, default is set
         today = datetime.datetime.today().strftime('%Y-%m-%d')
-        period = request.args.get('period', '2000-01-01,{}'.format(today))
+        period = request.args.get('period', '2001-01-01,{}'.format(today))
 
         agg_values = request.args.get('aggregate_values', False)
         agg_by = request.args.get('aggregate_by', None)

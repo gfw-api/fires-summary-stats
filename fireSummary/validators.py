@@ -56,12 +56,6 @@ def validate_args(func):
             return error(status=400, detail='For this batch service, polyname must one of: {}'
                          .format(', '.join(valid_polyname_list)))
 
-        # # validate global summary
-        # if input_combo[0].lower() == 'global' and len(input_combo) > 1:
-        #     return error(status=400,
-        #                  detail="if requesting globally summarized statistics, you cannot choose additional "
-        #                         "administrative units.")
-
         # validate firetype
         fire_type = request.args.get('fire_type')
         if fire_type:
@@ -75,9 +69,13 @@ def validate_args(func):
 
         agg_list = ['day', 'week', 'quarter', 'month', 'year', 'adm1', 'adm2']
 
+        if iso == 'global':
+            agg_list = [x for x in agg_list if x not in ['adm1', 'adm2']]
+            agg_list.append('iso')
+
         if agg_values:
             if agg_values.lower() not in ['true', 'false']:
-                return error(status=400, detail="aggregate_values parameter not "
+                return error(status=400, detail="aggregate_values parameter "
                                                 "must be either true or false")
 
             agg_values = eval(agg_values.title())
@@ -85,32 +83,22 @@ def validate_args(func):
         # validate aggregating with global summary
         if agg_values and agg_by:
 
-            if iso == 'global':
-                # make a valid global list by removing adm1, adm2 and adding iso as agg by options
-                global_valid_agg_list = [x for x in agg_list if x not in ['adm1', 'adm2']]
-                global_valid_agg_list.append('iso')
-                if agg_by.lower() not in global_valid_agg_list:
-                    return error(status=400,
-                                 detail="if requesting globally summarized statistics, "
-                                        "aggregate_by must be specified as one of {}".format(", ".join(global_valid_agg_list)))
+            if agg_by.lower() not in agg_list:
+                return error(status=400, detail="aggregate_by must be specified as one of: {} ".format(", ".join(agg_list)))
 
-            else:
-                if agg_by.lower() not in agg_list:
-                    return error(status=400, detail="aggregate_by must be specified as one of: {} ".format(", ".join(agg_list)))
+            if agg_by and not agg_values:
+                return error(status=400, detail="aggregate_values parameter must be "
+                                                "true in order to aggregate data")
 
-        if agg_by and not agg_values:
-            return error(status=400, detail="aggregate_values parameter must be "
-                                            "true in order to aggregate data")
+            if agg_values and not agg_by:
 
-        if agg_values and not agg_by:
-
-            return error(status=400, detail="if aggregate_values is TRUE, aggregate_by parameter must be specified "
-                                            "as one of: {}".format(", ".join(agg_list)))
+                return error(status=400, detail="if aggregate_values is TRUE, aggregate_by parameter must be specified "
+                                                "as one of: {}".format(", ".join(agg_list)))
 
         # validate period
         today = datetime.datetime.now()
         period = request.args.get('period', None)
-        minYear = 2000
+        minYear = 2001
         if period:
             if len(period.split(',')) < 2:
                 return error(status=400, detail="Period needs 2 arguments")
