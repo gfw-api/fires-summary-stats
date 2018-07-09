@@ -24,6 +24,7 @@ class DummyRequest(object):
 
 class SQLTest(unittest.TestCase):
 
+    # test dataset has COD, ABW and a lot of polynamnes (gadm, ifl_2013, wdpa, etc)
     def setUp(self):
         app.testing = True
         app.config['TESTING'] = True

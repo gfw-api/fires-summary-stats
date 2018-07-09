@@ -24,6 +24,9 @@ class SummaryService(object):
             if agg_values:
                 if agg_by in ['adm1', 'adm2', 'iso']:
                     groupby_dict = {'iso': ['iso'], 'adm1': ['adm1'], 'adm2': ['adm1', 'adm2']}
+                    if iso_code == 'global':
+                        groupby_dict['adm1'] = ['iso', 'adm1']
+                    logging.info("\n********DF: {} \n".format(df.head()))
                     grouped = df.groupby(groupby_dict[agg_by]).sum()['alerts'].reset_index()
 
                 else:

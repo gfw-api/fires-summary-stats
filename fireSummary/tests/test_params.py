@@ -68,6 +68,6 @@ class ParamsTest(unittest.TestCase):
                                      "administrative units.")
 
     def test_bad_global_agg(self):
-        agg_list = ['day', 'week', 'quarter', 'month', 'year', 'iso']
-        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/wdpa/global?aggregate_values=True&aggregate_by=adm1')
+        agg_list = ['day', 'week', 'quarter', 'month', 'year', 'adm1', 'iso']
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/wdpa/global?aggregate_values=True&aggregate_by=adm2')
         self.assertEqual(error_text, "aggregate_by must be specified as one of: {} ".format(", ".join(agg_list)))

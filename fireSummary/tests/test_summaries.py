@@ -41,14 +41,29 @@ def adm_mock(url, request):
     return response(200, content, headers, None, 5, request)
 
 
-# regex here to match GROUP BY iso
-@urlmatch(query=r'.*GROUP%20BY%20iso.*')
+# regex here to match GROUP BY iso and global query
+@urlmatch(query=r'.*GROUP%20BY%20iso$')
 def iso_mock(url, request):
+    logging.info("\n***********URL: {}\n".format(url))
     logging.debug('[TEST]: Found URL that matched iso_mock - mocking!')
 
     # this loads a cached response from this query to the production API:
     # "SELECT iso, SUM(alerts) FROM data WHERE polyname = 'wdpa' GROUP BY iso"
     with open('fireSummary/tests/fixtures/global_response.json') as src:
+        content = json.load(src)
+
+    headers = {'content-type': 'application/json'}
+    return response(200, content, headers, None, 5, request)
+
+
+# regex here to match GROUP BY adm1 and global query
+@urlmatch(query=r'.*GROUP%20BY%20iso.*adm1$')
+def adm1_mock(url, request):
+    logging.debug('[TEST]: Found URL that matched global_adm1_mock - mocking!')
+
+    # this loads a cached response from this query to the production API:
+    # "SELECT iso, SUM(alerts) FROM data WHERE polyname = 'wdpa' GROUP BY iso"
+    with open('fireSummary/tests/fixtures/adm1_response.json') as src:
         content = json.load(src)
 
     headers = {'content-type': 'application/json'}
@@ -74,10 +89,11 @@ class SummaryTest(unittest.TestCase):
         with HTTMock(year_mock):
             with HTTMock(adm_mock):
                 with HTTMock(iso_mock):
-                    response = self.app.get(request, follow_redirects=True)
-                    data = self.deserialize_data(response)
+                    with HTTMock(adm1_mock):
+                        response = self.app.get(request, follow_redirects=True)
+                        data = self.deserialize_data(response)
 
-                    return data
+                        return data
 
     def test_zero_fires_groupby(self):
         data = self.make_request('/api/v1/fire-alerts/summary-stats/mining/USA?aggregate_values=True&aggregate_by=day')
@@ -201,3 +217,18 @@ class SummaryTest(unittest.TestCase):
         # and the last
         self.assertEqual(data[-1]['alerts'], 158608)
         self.assertEqual(data[-1]['iso'], 'ZWE')
+
+    def test_global_group_by_adm1(self):
+
+        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/global?aggregate_values=True&aggregate_by=adm1')
+
+        # check that we have 34 rows - one for each ISO/adm1 combo
+        self.assertEqual(len(data), 34)
+
+        # and that the first row is correct
+        self.assertEqual(data[0]['alerts'], 17439)
+        self.assertEqual(data[0]['iso'], 'IDN')
+
+        # and the last
+        self.assertEqual(data[-1]['alerts'], 87)
+        self.assertEqual(data[-1]['iso'], 'IDN')

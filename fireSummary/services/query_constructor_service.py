@@ -31,6 +31,8 @@ class QueryConstructorService(object):
 
                 # add adm1 or adm1, adm2 to select statement
                 select_groupby_dict = {'iso': ', iso', 'adm1': ', adm1', 'adm2': ', adm1, adm2'}
+                if iso_code == 'global':
+                    select_groupby_dict['adm1'] = ', iso, adm1'
 
                 select_statement += select_groupby_dict[agg_by]
 
