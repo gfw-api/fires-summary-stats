@@ -44,7 +44,6 @@ def adm_mock(url, request):
 # regex here to match GROUP BY iso and global query
 @urlmatch(query=r'.*GROUP%20BY%20iso$')
 def iso_mock(url, request):
-    logging.info("\n***********URL: {}\n".format(url))
     logging.debug('[TEST]: Found URL that matched iso_mock - mocking!')
 
     # this loads a cached response from this query to the production API:

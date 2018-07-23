@@ -72,7 +72,7 @@ def validate_args(func):
         if iso == 'global':
             agg_list = [x for x in agg_list if x not in ['adm2']]
             agg_list.append('iso')
-        logging.info("\n************AGG LIST: {}".format(agg_list))
+
         if agg_values:
             if agg_values.lower() not in ['true', 'false']:
                 return error(status=400, detail="aggregate_values parameter "
