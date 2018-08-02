@@ -8,9 +8,16 @@ class SummaryService(object):
     (day, week, month, year)"""
 
     @staticmethod
-    def create_time_table(data, polyname, request, iso_code):
+    def create_time_table(dataset_name, data, polyname, request, iso_code):
 
         fire_type = request.args.get('fire_type', 'all')
+        confidence = request.args.get('gladConfirmedOnly', False)
+
+        if confidence == 'True':
+            confidence = True
+        if confidence == 'False':
+            confidence = False
+
         agg_values = request.args.get('aggregate_values', False)
         agg_by = request.args.get('aggregate_by', None)
 
@@ -44,8 +51,10 @@ class SummaryService(object):
                     groupby_list = ['year']
 
                     # return string formatted day value if day summary requested
-                    if agg_by != 'year':
+                    logging.info('AGGBY: {}'.format(agg_by))
+                    if agg_by != 'year' and agg_by != "None":
                         groupby_list.append(agg_by)
+
                     logging.info("GROUPBY LIST: {}".format(groupby_list))
                     grouped = df.groupby(groupby_list).sum()['alerts'].reset_index()
                     grouped.sort_values(by=groupby_list)
@@ -57,6 +66,10 @@ class SummaryService(object):
             if iso_code != 'global':
                 grouped['iso'] = iso_code
             grouped['polyname'] = polyname
-            grouped['fire_type'] = fire_type.upper()
+
+            if dataset_name == 'fires':
+                grouped['fire_type'] = fire_type.upper()
+            if dataset_name == 'glad':
+                grouped['gladConfirmedOnly'] = confidence
 
             return grouped.to_dict(orient='records')

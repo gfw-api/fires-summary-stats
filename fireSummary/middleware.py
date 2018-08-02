@@ -13,7 +13,7 @@ def valid_input_boundaries(func):
     return wrapper
 
 
-def test_bad_combo(polyname, iso_code, adm1_code=None, adm2_code=None):
+def test_bad_combo(dataset_name, polyname, iso_code, adm1_code=None, adm2_code=None):
 
     # get list of valid combos by reading in csv as json
     poly_iso_adm1_adm2_combos = util.load_valid_poly_iso()

@@ -5,7 +5,7 @@ class QueryConstructorService(object):
     """Class for formatting query and donwload sql"""
 
     @staticmethod
-    def format_dataset_query(request, polyname, iso_code, adm1_code=None, adm2_code=None):
+    def format_dataset_query(dataset_name, request, polyname, iso_code, adm1_code=None, adm2_code=None):
 
         # get parameters from query string. If none specific, default is set
         today = datetime.datetime.today().strftime('%Y-%m-%d')
@@ -13,7 +13,6 @@ class QueryConstructorService(object):
 
         agg_values = request.args.get('aggregate_values', False)
         agg_by = request.args.get('aggregate_by', None)
-        fire_type = request.args.get('fire_type', None)
 
         start_date, end_date = period.split(',')
 
@@ -85,8 +84,16 @@ class QueryConstructorService(object):
             sql += " and adm1 = {}".format(adm1_code)
         if adm2_code:
             sql += " and adm2 = {}".format(adm2_code)
-        if fire_type:
-            sql += " and fire_type = '{}'".format(fire_type.upper())
+
+        filter_dict = {'fires': 'fire_type', 'glad': 'gladConfirmedOnly'}
+        filter_vals = request.args.get(filter_dict[dataset_name], None)
+
+        if filter_vals:
+            if dataset_name == 'glad' and filter_vals == 'True':
+                sql += " and conf = '3'"
+
+            if dataset_name == 'fires':
+                sql += " and {} = '{}'".format(filter_dict[dataset_name], filter_vals.upper())
 
         # at the very end, add the GROUP BY statement
         if agg_values:

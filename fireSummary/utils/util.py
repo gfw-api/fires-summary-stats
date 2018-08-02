@@ -4,24 +4,19 @@ import json
 from CTRegisterMicroserviceFlask import request_to_microservice
 
 
-def query_micoservice(sql):
-    local_env = os.getenv('ENVIRONMENT')
-    if local_env == 'dev':
+def query_micoservice(sql, analysis_type):
 
-        # can't seem to get GET requests working locally
-        # this will be much easier in proudction - should just be a GET
-        config = {
-            'uri': '/query/3267be92-733f-45e4-bf81-be5a2b33112c?sql={}'.format(sql),
-            'method': 'POST',
-            'body': {"dataset": {"tableName": "index_3267be92733f45e4bf81be5a2b33112c_1528900401608"}}
-        }
-
-    else:
+    if analysis_type == 'glad':
+        dataset_id = os.getenv('GLAD_DATASET_ID')
+    elif analysis_type == 'fires':
         dataset_id = os.getenv('FIRES_DATASET_ID')
-        config = {
-            'uri': '/query/{}?sql={}'.format(dataset_id, sql),
-            'method': 'GET',
-        }
+    else:
+        raise ValueError('unknown analyis type: {}'.format(analysis_type))
+
+    config = {
+        'uri': '/query/{}?sql={}'.format(dataset_id, sql),
+        'method': 'GET',
+    }
 
     return request_to_microservice(config)
 
