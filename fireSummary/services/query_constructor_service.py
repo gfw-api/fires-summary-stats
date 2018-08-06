@@ -21,8 +21,10 @@ class QueryConstructorService(object):
             agg_by = 'alert_date'
 
         select_statement = "SELECT SUM(alerts)"
-        where_statement = "WHERE polyname = '{}' AND ".format(polyname)
-
+        if dataset_name == 'fires':
+            where_statement = "WHERE polyname = '{}' AND ".format(polyname)
+        else:
+            where_statement = ''
         # AGGREGATE VALUES
         if agg_values:
             # by admin level
@@ -66,7 +68,8 @@ class QueryConstructorService(object):
         else:
 
             # if summing globally, not by admin:
-            where_statement = "WHERE polyname = '{}' AND ".format(polyname)
+            if dataset_name == 'fires':
+                where_statement = "WHERE polyname = '{}' AND ".format(polyname)
 
             # if summing by admin, add this to where statement
             if not iso_code == 'global':
