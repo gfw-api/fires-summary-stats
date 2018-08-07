@@ -21,7 +21,7 @@ def serialize_response(dataset_name, request, fire_count_response, polyname):
     today = datetime.datetime.today().strftime('%Y-%m-%d')
     period = request.args.get('period', '2001-01-01,{}'.format(today))
 
-    filter_dict = {'fires': {'field_name': 'fire_type', 'default_val': 'ALL'}, 'glad': {'field_name': 'gladConfirmedOnly',
+    filter_dict = {'fires': {'field_name': 'fire_type', 'default_val': 'ALL'}, 'glad': {'field_name': 'gladConfirmOnly',
                                                                                         'default_val': False}}
     field_name = filter_dict[dataset_name]['field_name']
 

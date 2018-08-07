@@ -89,12 +89,12 @@ class QueryConstructorService(object):
         if adm2_code:
             sql += " and adm2 = {}".format(adm2_code)
 
-        filter_dict = {'fires': 'fire_type', 'glad': 'gladConfirmedOnly'}
+        filter_dict = {'fires': 'fire_type', 'glad': 'gladConfirmOnly'}
         filter_vals = request.args.get(filter_dict[dataset_name], None)
 
         if filter_vals:
             if dataset_name == 'glad' and filter_vals == 'True':
-                sql += " and conf = '3'"
+                sql += " and confidence = '3'"
 
             if dataset_name == 'fires':
                 sql += " and {} = '{}'".format(filter_dict[dataset_name], filter_vals.upper())

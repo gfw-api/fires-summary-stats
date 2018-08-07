@@ -11,7 +11,7 @@ class SummaryService(object):
     def create_time_table(dataset_name, data, polyname, request, iso_code):
 
         fire_type = request.args.get('fire_type', 'all')
-        confidence = request.args.get('gladConfirmedOnly', False)
+        confidence = request.args.get('gladConfirmOnly', False)
 
         if confidence == 'True':
             confidence = True
@@ -70,6 +70,6 @@ class SummaryService(object):
             if dataset_name == 'fires':
                 grouped['fire_type'] = fire_type.upper()
             if dataset_name == 'glad':
-                grouped['gladConfirmedOnly'] = confidence
+                grouped['gladConfirmOnly'] = confidence
 
             return grouped.to_dict(orient='records')

@@ -26,9 +26,7 @@ def summarize_data(dataset_name, polyname, iso_code, adm1_code=None, adm2_code=N
         logging.info("\nSQL REQUEST: {}".format(sql))
 
         # get response from microservice
-
         data = util.query_micoservice(sql, dataset_name)
-        print 'DATA : {}'.format(data)
         # aggregate data
         # now that actual querying is done, replace gadm28 with admin
         if polyname == 'gadm28':
