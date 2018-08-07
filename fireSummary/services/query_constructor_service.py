@@ -24,7 +24,8 @@ class QueryConstructorService(object):
         if dataset_name == 'fires':
             where_statement = "WHERE polyname = '{}' AND ".format(polyname)
         else:
-            where_statement = ''
+            where_statement = 'WHERE '
+
         # AGGREGATE VALUES
         if agg_values:
             # by admin level

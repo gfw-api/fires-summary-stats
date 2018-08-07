@@ -17,7 +17,7 @@ def query_micoservice(sql, analysis_type):
         'uri': '/query/{}?sql={}'.format(dataset_id, sql),
         'method': 'GET',
     }
-
+    print 'dataset id: {}'.format(dataset_id)
     return request_to_microservice(config)
 
 
