@@ -30,6 +30,7 @@ class SQLTest(unittest.TestCase):
         app.config['TESTING'] = True
         app.config['DEBUG'] = False
         self.app = app.test_client()
+        self.dataset_name = 'fires'
 
     def tearDown(self):
         pass
@@ -41,13 +42,14 @@ class SQLTest(unittest.TestCase):
         return json.loads(response.data)['errors'][0]['detail']
 
     def test_sql_admin0(self):
+
         # give a valid period
         request = DummyRequest('2012-01-01,2015-01-01')
 
         polyname = 'admin'
         iso_code = 'IDN'
 
-        sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
+        sql = QueryConstructorService.format_dataset_query(self.dataset_name, request, polyname, iso_code)
 
         correct_sql = "SELECT SUM(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2012-01-01' AND alert_date <= '2015-01-01')"
@@ -61,7 +63,7 @@ class SQLTest(unittest.TestCase):
         polyname = 'admin'
         iso_code = 'IDN'
 
-        sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
+        sql = QueryConstructorService.format_dataset_query(self.dataset_name, request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT SUM(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
@@ -75,7 +77,7 @@ class SQLTest(unittest.TestCase):
         polyname = 'admin'
         iso_code = 'IDN'
 
-        sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
+        sql = QueryConstructorService.format_dataset_query(self.dataset_name, request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
@@ -89,7 +91,7 @@ class SQLTest(unittest.TestCase):
         polyname = 'admin'
         iso_code = 'IDN'
 
-        sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
+        sql = QueryConstructorService.format_dataset_query(self.dataset_name, request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
@@ -103,7 +105,7 @@ class SQLTest(unittest.TestCase):
         polyname = 'admin'
         iso_code = 'IDN'
 
-        sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
+        sql = QueryConstructorService.format_dataset_query(self.dataset_name, request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
@@ -117,7 +119,7 @@ class SQLTest(unittest.TestCase):
         polyname = 'admin'
         iso_code = 'IDN'
 
-        sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
+        sql = QueryConstructorService.format_dataset_query(self.dataset_name, request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
@@ -131,7 +133,7 @@ class SQLTest(unittest.TestCase):
         polyname = 'admin'
         iso_code = 'IDN'
 
-        sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
+        sql = QueryConstructorService.format_dataset_query(self.dataset_name, request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT SUM(alerts), adm1 FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
@@ -145,7 +147,7 @@ class SQLTest(unittest.TestCase):
         polyname = 'admin'
         iso_code = 'IDN'
 
-        sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
+        sql = QueryConstructorService.format_dataset_query(self.dataset_name, request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT SUM(alerts), adm1, adm2 FROM data WHERE polyname = 'admin' AND iso = 'IDN' " \
@@ -160,7 +162,7 @@ class SQLTest(unittest.TestCase):
         polyname = 'admin'
         iso_code = 'IDN'
 
-        sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
+        sql = QueryConstructorService.format_dataset_query(self.dataset_name, request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT SUM(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
@@ -174,7 +176,7 @@ class SQLTest(unittest.TestCase):
         polyname = 'admin'
         iso_code = 'global'
 
-        sql = QueryConstructorService.format_dataset_query(request, polyname, iso_code)
+        sql = QueryConstructorService.format_dataset_query(self.dataset_name, request, polyname, iso_code)
 
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND " \

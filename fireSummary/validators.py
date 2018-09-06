@@ -9,7 +9,8 @@ import logging
 from utils import util
 
 
-def validate_args(func):
+def validate_args_fires(func):
+
     """Validate user arguments"""
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -63,68 +64,111 @@ def validate_args(func):
             if fire_type.lower() not in valid_fire_list:
                 return error(status=400, detail='For this batch service, fire_type must one of {}'.format(', '.join(valid_fire_list)))
 
-        # validate aggregate
-        agg_by = request.args.get('aggregate_by')
-        agg_values = request.args.get('aggregate_values')
+        aggregate_error = validate_aggregate(iso)
+        if aggregate_error:
+            return aggregate_error
 
-        agg_list = ['day', 'week', 'quarter', 'month', 'year', 'adm1', 'adm2']
-
-        if iso == 'global':
-            agg_list = [x for x in agg_list if x not in ['adm2']]
-            agg_list.append('iso')
-
-        if agg_values:
-            if agg_values.lower() not in ['true', 'false']:
-                return error(status=400, detail="aggregate_values parameter "
-                                                "must be either true or false")
-
-            agg_values = eval(agg_values.title())
-
-        # validate aggregating with global summary
-        if agg_values and agg_by:
-
-            if agg_by.lower() not in agg_list:
-                return error(status=400, detail="aggregate_by must be specified as one of: {} ".format(", ".join(agg_list)))
-
-            if agg_by and not agg_values:
-                return error(status=400, detail="aggregate_values parameter must be "
-                                                "true in order to aggregate data")
-
-            if agg_values and not agg_by:
-
-                return error(status=400, detail="if aggregate_values is TRUE, aggregate_by parameter must be specified "
-                                                "as one of: {}".format(", ".join(agg_list)))
-
-        # validate period
-        today = datetime.datetime.now()
-        period = request.args.get('period', None)
-        minYear = 2001
-        if period:
-            if len(period.split(',')) < 2:
-                return error(status=400, detail="Period needs 2 arguments")
-
-            else:
-                if '"' in period or "'" in period:
-                    return error(status=400, detail="Incorrect format, should be YYYY-MM-DD,YYYY-MM-DD (no quotes)")
-
-                period_from = period.split(',')[0]
-                period_to = period.split(',')[1]
-
-                try:
-                    period_from = datetime.datetime.strptime(period_from, '%Y-%m-%d')
-                    period_to = datetime.datetime.strptime(period_to, '%Y-%m-%d')
-                except ValueError:
-                    return error(status=400, detail="Incorrect format, should be YYYY-MM-DD,YYYY-MM-DD")
-
-                if period_from.year < minYear:
-                    return error(status=400, detail="Start date can't be earlier than {}-01-01".format(minYear))
-
-                if period_to.year > today.year:
-                    return error(status=400, detail="End year can't be later than {}".format(today.year))
-
-                if period_from > period_to:
-                    return error(status=400, detail='Start date must be less than end date')
+        period_error = validate_period()
+        if period_error:
+            return period_error
 
         return func(*args, **kwargs)
 
     return wrapper
+
+
+def validate_args_glad(func):
+    """Validate user arguments"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+
+        # validate iso/adm1/adm2 combo
+        iso = request.view_args.get('iso_code', None)
+        adm1 = request.view_args.get('adm1_code', None)
+        adm2 = request.view_args.get('adm2_code', None)
+
+        aggregate_error = validate_aggregate(iso)
+        if aggregate_error:
+            return aggregate_error
+
+        period_error = validate_period()
+        if period_error:
+            return period_error
+
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+def validate_period():
+
+    # validate period
+    today = datetime.datetime.now()
+    period = request.args.get('period', None)
+    minYear = 2001
+    if period:
+
+        if len(period.split(',')) < 2:
+            return error(status=400, detail="Period needs 2 arguments")
+
+        else:
+            if '"' in period or "'" in period:
+                return error(status=400, detail="Incorrect format, should be YYYY-MM-DD,YYYY-MM-DD (no quotes)")
+
+            period_from = period.split(',')[0]
+            period_to = period.split(',')[1]
+
+            try:
+                period_from = datetime.datetime.strptime(period_from, '%Y-%m-%d')
+                period_to = datetime.datetime.strptime(period_to, '%Y-%m-%d')
+            except ValueError:
+                return error(status=400, detail="Incorrect format, should be YYYY-MM-DD,YYYY-MM-DD")
+            print 'PERIOD  FROM: {}'.format(period_from)
+            print 'PERIOD TO: {}'.format(period_to)
+            if period_from.year < minYear:
+                return error(status=400, detail="Start date can't be earlier than {}-01-01".format(minYear))
+
+            if period_to.year > today.year:
+                return error(status=400, detail="End year can't be later than {}".format(today.year))
+
+            if period_from > period_to:
+                print 'GOT OUR ERROR '
+                return error(status=400, detail='Start date must be less than end date')
+
+            else:
+                return None
+
+
+def validate_aggregate(iso):
+    # validate aggregate
+    agg_by = request.args.get('aggregate_by')
+    agg_values = request.args.get('aggregate_values')
+
+    agg_list = ['day', 'week', 'quarter', 'month', 'year', 'adm1', 'adm2']
+
+    if iso == 'global':
+        agg_list = [x for x in agg_list if x not in ['adm2']]
+        agg_list.append('iso')
+
+    if agg_values:
+        if agg_values.lower() not in ['true', 'false']:
+            return error(status=400, detail="aggregate_values parameter "
+                                            "must be either true or false")
+
+        agg_values = eval(agg_values.title())
+
+    # validate aggregating with global summary
+    if agg_values and agg_by:
+
+        if agg_by.lower() not in agg_list:
+            return error(status=400,
+                         detail="aggregate_by must be specified as one of: {} ".format(", ".join(agg_list)))
+
+        if agg_by and not agg_values:
+            return error(status=400, detail="aggregate_values parameter must be "
+                                            "true in order to aggregate data")
+
+        if agg_values and not agg_by:
+            return error(status=400,
+                         detail="if aggregate_values is TRUE, aggregate_by parameter must be specified "
+                            "as one of: {}".format(", ".join(agg_list)))
