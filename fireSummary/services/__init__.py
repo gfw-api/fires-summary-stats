@@ -6,3 +6,4 @@ from __future__ import print_function
 
 from fireSummary.services.summary_service import SummaryService
 from fireSummary.services.query_constructor_service import QueryConstructorService
+

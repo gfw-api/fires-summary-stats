@@ -8,9 +8,16 @@ class SummaryService(object):
     (day, week, month, year)"""
 
     @staticmethod
-    def create_time_table(data, polyname, request, iso_code):
+    def create_time_table(dataset_name, data, polyname, request, iso_code):
 
         fire_type = request.args.get('fire_type', 'all')
+        confidence = request.args.get('gladConfirmOnly', False)
+
+        if confidence == 'True':
+            confidence = True
+        if confidence == 'False':
+            confidence = False
+
         agg_values = request.args.get('aggregate_values', False)
         agg_by = request.args.get('aggregate_by', None)
 
@@ -22,8 +29,11 @@ class SummaryService(object):
             df = df.rename(columns={'SUM(alerts)': 'alerts'})
 
             if agg_values:
-                if 'adm' in agg_by:
-                    groupby_dict = {'adm1': ['adm1'], 'adm2': ['adm1', 'adm2']}
+                if agg_by in ['adm1', 'adm2', 'iso']:
+                    groupby_dict = {'iso': ['iso'], 'adm1': ['adm1'], 'adm2': ['adm1', 'adm2']}
+                    if iso_code == 'global':
+                        groupby_dict['adm1'] = ['iso', 'adm1']
+                    logging.info("\n********DF: {} \n".format(df.head()))
                     grouped = df.groupby(groupby_dict[agg_by]).sum()['alerts'].reset_index()
 
                 else:
@@ -41,16 +51,25 @@ class SummaryService(object):
                     groupby_list = ['year']
 
                     # return string formatted day value if day summary requested
-                    if agg_by != 'year':
+                    logging.info('AGGBY: {}'.format(agg_by))
+                    if agg_by != 'year' and agg_by != "None":
                         groupby_list.append(agg_by)
+
+                    logging.info("GROUPBY LIST: {}".format(groupby_list))
                     grouped = df.groupby(groupby_list).sum()['alerts'].reset_index()
                     grouped.sort_values(by=groupby_list)
+                    grouped['iso'] = iso_code
 
             else:
                 grouped = df
 
-            grouped['iso'] = iso_code
+            if iso_code != 'global':
+                grouped['iso'] = iso_code
             grouped['polyname'] = polyname
-            grouped['fire_type'] = fire_type.upper()
+
+            if dataset_name == 'fires':
+                grouped['fire_type'] = fire_type.upper()
+            if dataset_name == 'glad':
+                grouped['gladConfirmOnly'] = confidence
 
             return grouped.to_dict(orient='records')

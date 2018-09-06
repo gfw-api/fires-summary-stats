@@ -1,0 +1,839 @@
+{
+  "data": [
+    {
+      "iso": "BRA",
+      "SUM(alerts)": 1493864
+    },
+    {
+      "iso": "ZMB",
+      "SUM(alerts)": 1706540
+    },
+    {
+      "iso": "NGA",
+      "SUM(alerts)": 501038
+    },
+    {
+      "iso": "AUS",
+      "SUM(alerts)": 1643864
+    },
+    {
+      "iso": "TZA",
+      "SUM(alerts)": 1248493
+    },
+    {
+      "iso": "MOZ",
+      "SUM(alerts)": 864810
+    },
+    {
+      "iso": "RUS",
+      "SUM(alerts)": 580496
+    },
+    {
+      "iso": "USA",
+      "SUM(alerts)": 582705
+    },
+    {
+      "iso": "VEN",
+      "SUM(alerts)": 205970
+    },
+    {
+      "iso": "THA",
+      "SUM(alerts)": 224251
+    },
+    {
+      "iso": "MEX",
+      "SUM(alerts)": 166198
+    },
+    {
+      "iso": "SSD",
+      "SUM(alerts)": 790721
+    },
+    {
+      "iso": "IND",
+      "SUM(alerts)": 161667
+    },
+    {
+      "iso": "KHM",
+      "SUM(alerts)": 290856
+    },
+    {
+      "iso": "COD",
+      "SUM(alerts)": 918332
+    },
+    {
+      "iso": "ZAF",
+      "SUM(alerts)": 209570
+    },
+    {
+      "iso": "GIN",
+      "SUM(alerts)": 435582
+    },
+    {
+      "iso": "GHA",
+      "SUM(alerts)": 207784
+    },
+    {
+      "iso": "CAF",
+      "SUM(alerts)": 830662
+    },
+    {
+      "iso": "CHN",
+      "SUM(alerts)": 101771
+    },
+    {
+      "iso": "IDN",
+      "SUM(alerts)": 108457
+    },
+    {
+      "iso": "CIV",
+      "SUM(alerts)": 259171
+    },
+    {
+      "iso": "UGA",
+      "SUM(alerts)": 135931
+    },
+    {
+      "iso": "AGO",
+      "SUM(alerts)": 368993
+    },
+    {
+      "iso": "ARG",
+      "SUM(alerts)": 108698
+    },
+    {
+      "iso": "ETH",
+      "SUM(alerts)": 285216
+    },
+    {
+      "iso": "BOL",
+      "SUM(alerts)": 220567
+    },
+    {
+      "iso": "BEN",
+      "SUM(alerts)": 203641
+    },
+    {
+      "iso": "ZWE",
+      "SUM(alerts)": 158608
+    },
+    {
+      "iso": "MWI",
+      "SUM(alerts)": 98217
+    },
+    {
+      "iso": "MDG",
+      "SUM(alerts)": 151420
+    },
+    {
+      "iso": "TCD",
+      "SUM(alerts)": 430426
+    },
+    {
+      "iso": "LAO",
+      "SUM(alerts)": 92202
+    },
+    {
+      "iso": "VNM",
+      "SUM(alerts)": 57836
+    },
+    {
+      "iso": "GTM",
+      "SUM(alerts)": 121010
+    },
+    {
+      "iso": "COG",
+      "SUM(alerts)": 80556
+    },
+    {
+      "iso": "SEN",
+      "SUM(alerts)": 131128
+    },
+    {
+      "iso": "CMR",
+      "SUM(alerts)": 157628
+    },
+    {
+      "iso": "BFA",
+      "SUM(alerts)": 129237
+    },
+    {
+      "iso": "NAM",
+      "SUM(alerts)": 174852
+    },
+    {
+      "iso": "MMR",
+      "SUM(alerts)": 93409
+    },
+    {
+      "iso": "PHL",
+      "SUM(alerts)": 32245
+    },
+    {
+      "iso": "MLI",
+      "SUM(alerts)": 98500
+    },
+    {
+      "iso": "HND",
+      "SUM(alerts)": 51267
+    },
+    {
+      "iso": "GNB",
+      "SUM(alerts)": 40855
+    },
+    {
+      "iso": "NIC",
+      "SUM(alerts)": 45959
+    },
+    {
+      "iso": "COL",
+      "SUM(alerts)": 33924
+    },
+    {
+      "iso": "ROU",
+      "SUM(alerts)": 18068
+    },
+    {
+      "iso": "TGO",
+      "SUM(alerts)": 46993
+    },
+    {
+      "iso": "PRY",
+      "SUM(alerts)": 36109
+    },
+    {
+      "iso": "ITA",
+      "SUM(alerts)": 24951
+    },
+    {
+      "iso": "BWA",
+      "SUM(alerts)": 169904
+    },
+    {
+      "iso": "ESP",
+      "SUM(alerts)": 24276
+    },
+    {
+      "iso": "KEN",
+      "SUM(alerts)": 19384
+    },
+    {
+      "iso": "CAN",
+      "SUM(alerts)": 138601
+    },
+    {
+      "iso": "BGR",
+      "SUM(alerts)": 12633
+    },
+    {
+      "iso": "PRT",
+      "SUM(alerts)": 25998
+    },
+    {
+      "iso": "UKR",
+      "SUM(alerts)": 15148
+    },
+    {
+      "iso": "PAK",
+      "SUM(alerts)": 12412
+    },
+    {
+      "iso": "LKA",
+      "SUM(alerts)": 9880
+    },
+    {
+      "iso": "SLE",
+      "SUM(alerts)": 33212
+    },
+    {
+      "iso": "FRA",
+      "SUM(alerts)": 14085
+    },
+    {
+      "iso": "KAZ",
+      "SUM(alerts)": 33859
+    },
+    {
+      "iso": "NPL",
+      "SUM(alerts)": 33425
+    },
+    {
+      "iso": "GAB",
+      "SUM(alerts)": 14009
+    },
+    {
+      "iso": "SDN",
+      "SUM(alerts)": 45892
+    },
+    {
+      "iso": "IRQ",
+      "SUM(alerts)": 13348
+    },
+    {
+      "iso": "GRC",
+      "SUM(alerts)": 14220
+    },
+    {
+      "iso": "PER",
+      "SUM(alerts)": 9269
+    },
+    {
+      "iso": "JPN",
+      "SUM(alerts)": 6641
+    },
+    {
+      "iso": "CUB",
+      "SUM(alerts)": 10257
+    },
+    {
+      "iso": "LBR",
+      "SUM(alerts)": 10887
+    },
+    {
+      "iso": "DOM",
+      "SUM(alerts)": 6397
+    },
+    {
+      "iso": "SLV",
+      "SUM(alerts)": 5658
+    },
+    {
+      "iso": "ECU",
+      "SUM(alerts)": 9143
+    },
+    {
+      "iso": "POL",
+      "SUM(alerts)": 4324
+    },
+    {
+      "iso": "DEU",
+      "SUM(alerts)": 3779
+    },
+    {
+      "iso": "HRV",
+      "SUM(alerts)": 7264
+    },
+    {
+      "iso": "IRN",
+      "SUM(alerts)": 4424
+    },
+    {
+      "iso": "EGY",
+      "SUM(alerts)": 4084
+    },
+    {
+      "iso": "GBR",
+      "SUM(alerts)": 5880
+    },
+    {
+      "iso": "MNG",
+      "SUM(alerts)": 38118
+    },
+    {
+      "iso": "CHL",
+      "SUM(alerts)": 6271
+    },
+    {
+      "iso": "MYS",
+      "SUM(alerts)": 3880
+    },
+    {
+      "iso": "PAN",
+      "SUM(alerts)": 4478
+    },
+    {
+      "iso": "BDI",
+      "SUM(alerts)": 4472
+    },
+    {
+      "iso": "PNG",
+      "SUM(alerts)": 12262
+    },
+    {
+      "iso": "HUN",
+      "SUM(alerts)": 2790
+    },
+    {
+      "iso": "MAR",
+      "SUM(alerts)": 3775
+    },
+    {
+      "iso": "SUR",
+      "SUM(alerts)": 4301
+    },
+    {
+      "iso": "BLZ",
+      "SUM(alerts)": 5787
+    },
+    {
+      "iso": "NER",
+      "SUM(alerts)": 13522
+    },
+    {
+      "iso": "URY",
+      "SUM(alerts)": 2716
+    },
+    {
+      "iso": "GUF",
+      "SUM(alerts)": 3419
+    },
+    {
+      "iso": "CRI",
+      "SUM(alerts)": 2832
+    },
+    {
+      "iso": "BLR",
+      "SUM(alerts)": 3919
+    },
+    {
+      "iso": "TLS",
+      "SUM(alerts)": 1849
+    },
+    {
+      "iso": "REU",
+      "SUM(alerts)": 6968
+    },
+    {
+      "iso": "BGD",
+      "SUM(alerts)": 4170
+    },
+    {
+      "iso": "ALB",
+      "SUM(alerts)": 3523
+    },
+    {
+      "iso": "ARE",
+      "SUM(alerts)": 2686
+    },
+    {
+      "iso": "BTN",
+      "SUM(alerts)": 2056
+    },
+    {
+      "iso": "SWZ",
+      "SUM(alerts)": 2589
+    },
+    {
+      "iso": "SAU",
+      "SUM(alerts)": 1374
+    },
+    {
+      "iso": "TKM",
+      "SUM(alerts)": 4078
+    },
+    {
+      "iso": "LSO",
+      "SUM(alerts)": 2153
+    },
+    {
+      "iso": "AZE",
+      "SUM(alerts)": 2292
+    },
+    {
+      "iso": "JAM",
+      "SUM(alerts)": 1190
+    },
+    {
+      "iso": "RWA",
+      "SUM(alerts)": 2549
+    },
+    {
+      "iso": "VUT",
+      "SUM(alerts)": 1106
+    },
+    {
+      "iso": "NZL",
+      "SUM(alerts)": 758
+    },
+    {
+      "iso": "UZB",
+      "SUM(alerts)": 977
+    },
+    {
+      "iso": "ARM",
+      "SUM(alerts)": 1468
+    },
+    {
+      "iso": "XCA",
+      "SUM(alerts)": 3520
+    },
+    {
+      "iso": "SRB",
+      "SUM(alerts)": 846
+    },
+    {
+      "iso": "NCL",
+      "SUM(alerts)": 1032
+    },
+    {
+      "iso": "SVK",
+      "SUM(alerts)": 637
+    },
+    {
+      "iso": "DZA",
+      "SUM(alerts)": 1756
+    },
+    {
+      "iso": "KWT",
+      "SUM(alerts)": 734
+    },
+    {
+      "iso": "GUY",
+      "SUM(alerts)": 1046
+    },
+    {
+      "iso": "IRL",
+      "SUM(alerts)": 1070
+    },
+    {
+      "iso": "KOR",
+      "SUM(alerts)": 512
+    },
+    {
+      "iso": "DNK",
+      "SUM(alerts)": 551
+    },
+    {
+      "iso": "LVA",
+      "SUM(alerts)": 688
+    },
+    {
+      "iso": "TUR",
+      "SUM(alerts)": 451
+    },
+    {
+      "iso": "GMB",
+      "SUM(alerts)": 862
+    },
+    {
+      "iso": "BEL",
+      "SUM(alerts)": 523
+    },
+    {
+      "iso": "GEO",
+      "SUM(alerts)": 915
+    },
+    {
+      "iso": "BIH",
+      "SUM(alerts)": 770
+    },
+    {
+      "iso": "MKD",
+      "SUM(alerts)": 744
+    },
+    {
+      "iso": "BHS",
+      "SUM(alerts)": 1014
+    },
+    {
+      "iso": "NLD",
+      "SUM(alerts)": 367
+    },
+    {
+      "iso": "TTO",
+      "SUM(alerts)": 508
+    },
+    {
+      "iso": "AFG",
+      "SUM(alerts)": 386
+    },
+    {
+      "iso": "UMI",
+      "SUM(alerts)": 284
+    },
+    {
+      "iso": "AUT",
+      "SUM(alerts)": 428
+    },
+    {
+      "iso": "SWE",
+      "SUM(alerts)": 363
+    },
+    {
+      "iso": "CZE",
+      "SUM(alerts)": 332
+    },
+    {
+      "iso": "LTU",
+      "SUM(alerts)": 327
+    },
+    {
+      "iso": "ISL",
+      "SUM(alerts)": 9631
+    },
+    {
+      "iso": "SVN",
+      "SUM(alerts)": 314
+    },
+    {
+      "iso": "ERI",
+      "SUM(alerts)": 279
+    },
+    {
+      "iso": "TUN",
+      "SUM(alerts)": 343
+    },
+    {
+      "iso": "HKG",
+      "SUM(alerts)": 200
+    },
+    {
+      "iso": "COM",
+      "SUM(alerts)": 283
+    },
+    {
+      "iso": "CYP",
+      "SUM(alerts)": 221
+    },
+    {
+      "iso": "MRT",
+      "SUM(alerts)": 226
+    },
+    {
+      "iso": "QAT",
+      "SUM(alerts)": 145
+    },
+    {
+      "iso": "MNP",
+      "SUM(alerts)": 131
+    },
+    {
+      "iso": "TJK",
+      "SUM(alerts)": 207
+    },
+    {
+      "iso": "GNQ",
+      "SUM(alerts)": 129
+    },
+    {
+      "iso": "FIN",
+      "SUM(alerts)": 184
+    },
+    {
+      "iso": "GRL",
+      "SUM(alerts)": 232
+    },
+    {
+      "iso": "HMD",
+      "SUM(alerts)": 192
+    },
+    {
+      "iso": "SGS",
+      "SUM(alerts)": 134
+    },
+    {
+      "iso": "CPV",
+      "SUM(alerts)": 532
+    },
+    {
+      "iso": "MNE",
+      "SUM(alerts)": 163
+    },
+    {
+      "iso": "ISR",
+      "SUM(alerts)": 180
+    },
+    {
+      "iso": "GLP",
+      "SUM(alerts)": 97
+    },
+    {
+      "iso": "KGZ",
+      "SUM(alerts)": 139
+    },
+    {
+      "iso": "TWN",
+      "SUM(alerts)": 84
+    },
+    {
+      "iso": "EST",
+      "SUM(alerts)": 102
+    },
+    {
+      "iso": "LUX",
+      "SUM(alerts)": 54
+    },
+    {
+      "iso": "NOR",
+      "SUM(alerts)": 82
+    },
+    {
+      "iso": "FJI",
+      "SUM(alerts)": 50
+    },
+    {
+      "iso": "XKO",
+      "SUM(alerts)": 190
+    },
+    {
+      "iso": "YEM",
+      "SUM(alerts)": 54
+    },
+    {
+      "iso": "PSE",
+      "SUM(alerts)": 67
+    },
+    {
+      "iso": "MTQ",
+      "SUM(alerts)": 56
+    },
+    {
+      "iso": "MDA",
+      "SUM(alerts)": 67
+    },
+    {
+      "iso": "BRN",
+      "SUM(alerts)": 43
+    },
+    {
+      "iso": "ATG",
+      "SUM(alerts)": 28
+    },
+    {
+      "iso": "LBN",
+      "SUM(alerts)": 45
+    },
+    {
+      "iso": "CHE",
+      "SUM(alerts)": 27
+    },
+    {
+      "iso": "PRI",
+      "SUM(alerts)": 28
+    },
+    {
+      "iso": "JOR",
+      "SUM(alerts)": 25
+    },
+    {
+      "iso": "LCA",
+      "SUM(alerts)": 28
+    },
+    {
+      "iso": "MUS",
+      "SUM(alerts)": 21
+    },
+    {
+      "iso": "TCA",
+      "SUM(alerts)": 21
+    },
+    {
+      "iso": "GUM",
+      "SUM(alerts)": 23
+    },
+    {
+      "iso": "MLT",
+      "SUM(alerts)": 15
+    },
+    {
+      "iso": "CUW",
+      "SUM(alerts)": 10
+    },
+    {
+      "iso": "KIR",
+      "SUM(alerts)": 9
+    },
+    {
+      "iso": "GRD",
+      "SUM(alerts)": 9
+    },
+    {
+      "iso": "HTI",
+      "SUM(alerts)": 11
+    },
+    {
+      "iso": "BES",
+      "SUM(alerts)": 10
+    },
+    {
+      "iso": "PRK",
+      "SUM(alerts)": 8
+    },
+    {
+      "iso": "STP",
+      "SUM(alerts)": 6
+    },
+    {
+      "iso": "OMN",
+      "SUM(alerts)": 6
+    },
+    {
+      "iso": "MYT",
+      "SUM(alerts)": 3
+    },
+    {
+      "iso": "VCT",
+      "SUM(alerts)": 3
+    },
+    {
+      "iso": "ATF",
+      "SUM(alerts)": 2
+    },
+    {
+      "iso": "IOT",
+      "SUM(alerts)": 2
+    },
+    {
+      "iso": "MAF",
+      "SUM(alerts)": 2
+    },
+    {
+      "iso": "NFK",
+      "SUM(alerts)": 2
+    },
+    {
+      "iso": "VGB",
+      "SUM(alerts)": 2
+    },
+    {
+      "iso": "BRB",
+      "SUM(alerts)": 1
+    },
+    {
+      "iso": "DMA",
+      "SUM(alerts)": 1
+    },
+    {
+      "iso": "ESH",
+      "SUM(alerts)": 2
+    },
+    {
+      "iso": "FLK",
+      "SUM(alerts)": 1
+    },
+    {
+      "iso": "PLW",
+      "SUM(alerts)": 1
+    },
+    {
+      "iso": "SHN",
+      "SUM(alerts)": 1
+    },
+    {
+      "iso": "SJM",
+      "SUM(alerts)": 15
+    },
+    {
+      "iso": "SLB",
+      "SUM(alerts)": 1
+    },
+    {
+      "iso": "SYC",
+      "SUM(alerts)": 2
+    }
+  ],
+  "meta": {
+    "cloneUrl": {
+      "http_method": "POST",
+      "url": "/v1/dataset/4145f642-5455-4414-b214-58ad39b83e1e/clone",
+      "body": {
+        "dataset": {
+          "datasetUrl": "/v1/query/4145f642-5455-4414-b214-58ad39b83e1e?sql=select%20iso%2C%20SUM%28alerts%29%20FROM%20data%20WHERE%20polyname%3D%27wdpa%27%20GROUP%20BY%20iso",
+          "application": [
+            "your",
+            "apps"
+          ]
+        }
+      }
+    }
+  }
+}

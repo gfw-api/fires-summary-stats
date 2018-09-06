@@ -1,13 +1,12 @@
 """The API MODULE"""
 
 import os
-import json
 import logging
 
 from flask import Flask
 from fireSummary.config import SETTINGS
 from fireSummary.routes.api import error
-from fireSummary.routes.api.v1 import fires_endpoints
+from fireSummary.routes.api.v1 import fires_endpoints, glad_endpoints
 from fireSummary.utils.files import load_config_json
 import CTRegisterMicroserviceFlask
 
@@ -22,7 +21,7 @@ app = Flask(__name__)
 
 # Routing
 app.register_blueprint(fires_endpoints, url_prefix='/api/v1/fire-alerts')
-
+app.register_blueprint(glad_endpoints, url_prefix='/api/v1/glad-alerts')
 # CT
 info = load_config_json('register')
 swagger = load_config_json('swagger')
