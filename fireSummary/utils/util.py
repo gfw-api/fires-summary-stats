@@ -17,10 +17,10 @@ def query_micoservice(sql, analysis_type):
         'uri': '/query/{}?sql={}'.format(dataset_id, sql),
         'method': 'GET',
     }
-    print 'dataset id: {}'.format(dataset_id)
     return request_to_microservice(config)
 
 
 def load_valid_poly_iso():
     with open('fireSummary/data/gadm28.json') as thedata:
         return json.load(thedata)
+

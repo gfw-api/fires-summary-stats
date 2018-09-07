@@ -54,6 +54,8 @@ spec:
                   key: API_VERSION
           - name: FIRES_DATASET_ID
             value: 4145f642-5455-4414-b214-58ad39b83e1e
+          - name: GLAD_DATASET_ID
+            value: 66903881-68fe-4e7f-9bdf-cde9a7fde9cf
 
         ports:
           - containerPort: 5700
