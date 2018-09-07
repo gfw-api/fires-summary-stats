@@ -11,14 +11,21 @@ class QueryConstructorService(object):
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         period = request.args.get('period', '2001-01-01,{}'.format(today))
 
+        agg_by = request.args.get('aggregate_by', False)
         agg_values = request.args.get('aggregate_values', False)
-        agg_by = request.args.get('aggregate_by', None)
+        agg_admin = request.args.get('aggregate_admin', None)
+        agg_time = request.args.get('aggregate_time', None)
+
+        if agg_by in ['iso', 'adm1', 'adm2', 'global']:
+            agg_admin = agg_by
+        if agg_by in ['day', 'week', 'month', 'quarter', 'year']:
+            agg_time = agg_by
 
         start_date, end_date = period.split(',')
 
         groupby_sql = None
-        if agg_by == 'day':
-            agg_by = 'alert_date'
+        if agg_time == 'day':
+            agg_time = 'alert_date'
 
         select_statement = "SELECT SUM(alerts)"
         if dataset_name == 'fires':
@@ -28,17 +35,19 @@ class QueryConstructorService(object):
 
         # AGGREGATE VALUES
         if agg_values:
+
             # by admin level
-            if agg_by in ['adm1', 'adm2', 'iso']:
+            if agg_admin in ['adm1', 'adm2', 'iso']:
 
                 # add adm1 or adm1, adm2 to select statement
                 select_groupby_dict = {'iso': ', iso', 'adm1': ', adm1', 'adm2': ', adm1, adm2'}
                 if iso_code == 'global':
+
                     select_groupby_dict['adm1'] = ', iso, adm1'
 
-                select_statement += select_groupby_dict[agg_by]
+                select_statement += select_groupby_dict[agg_admin]
 
-                groupby_sql = select_groupby_dict[agg_by].strip(', ')
+                groupby_sql = select_groupby_dict[agg_admin].strip(', ')
 
                 # if summing by admin, add this to where statement
                 if not iso_code == 'global':
@@ -51,13 +60,14 @@ class QueryConstructorService(object):
                                                                              start_date, end_date)
 
             # by time interval
-            else:
+            if agg_time or agg_admin == 'global':
 
                 select_statement += ", alert_date"
 
                 # if summing by admin, add this to where statement
                 if not iso_code == 'global':
-                    where_statement += "iso = '{}' AND ".format(iso_code)
+                    if "iso = '{}' AND ".format(iso_code) not in where_statement:
+                        where_statement += "iso = '{}' AND ".format(iso_code)
 
                 sql = "{0} FROM data " \
                       "{1}" \
@@ -101,9 +111,12 @@ class QueryConstructorService(object):
 
         # at the very end, add the GROUP BY statement
         if agg_values:
-            if agg_by in ['adm1', 'adm2', 'iso']:
-                sql += " GROUP BY " + groupby_sql
-            else:
-                sql += " GROUP BY alert_date"
+            if agg_time or agg_admin == 'global':
+                if not groupby_sql:
+                    groupby_sql = 'alert_date'
+                else:
+                    groupby_sql += ', alert_date'
+
+            sql += " GROUP BY " + groupby_sql
 
         return sql

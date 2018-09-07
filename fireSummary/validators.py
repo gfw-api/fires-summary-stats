@@ -87,6 +87,27 @@ def validate_args_glad(func):
         adm1 = request.view_args.get('adm1_code', None)
         adm2 = request.view_args.get('adm2_code', None)
 
+        input_combo = [iso, adm1, adm2]
+
+        # get rid of None's
+        input_combo = [x for x in input_combo if x is not None]
+
+        # create list of valid admin combos, based on input combo
+        input_len = len(input_combo) + 1
+
+        # read in all possible poly/iso/adm1/adm2 combos
+        poly_iso_adm1_adm2_combos = util.load_valid_poly_iso()
+        iso_adm1_adm2_combos = [x[1:input_len] for x in poly_iso_adm1_adm2_combos]
+
+        if len(input_combo) > 1 and input_combo[0] == 'global':
+            return error(status=400, detail="if requesting globally summarized statistics, you cannot choose "
+                                            "additional administrative units.")
+
+        if input_combo[0] != 'global' and input_combo not in iso_adm1_adm2_combos:
+            return error(status=400, detail='That combination of admin units (ISO, adm1, adm2) does not exist. Please'
+                                            ' consult the GADM dataset (https://gadm.org/) to determine '
+                                            'a valid combination')
+
         aggregate_error = validate_aggregate(iso)
         if aggregate_error:
             return aggregate_error
@@ -123,8 +144,7 @@ def validate_period():
                 period_to = datetime.datetime.strptime(period_to, '%Y-%m-%d')
             except ValueError:
                 return error(status=400, detail="Incorrect format, should be YYYY-MM-DD,YYYY-MM-DD")
-            print 'PERIOD  FROM: {}'.format(period_from)
-            print 'PERIOD TO: {}'.format(period_to)
+
             if period_from.year < minYear:
                 return error(status=400, detail="Start date can't be earlier than {}-01-01".format(minYear))
 
@@ -132,7 +152,6 @@ def validate_period():
                 return error(status=400, detail="End year can't be later than {}".format(today.year))
 
             if period_from > period_to:
-                print 'GOT OUR ERROR '
                 return error(status=400, detail='Start date must be less than end date')
 
             else:

@@ -18,8 +18,16 @@ class SummaryService(object):
         if confidence == 'False':
             confidence = False
 
+        agg_by = request.args.get('aggregate_by', False)
         agg_values = request.args.get('aggregate_values', False)
-        agg_by = request.args.get('aggregate_by', None)
+
+        agg_admin = request.args.get('aggregate_admin', None)
+        agg_time = request.args.get('aggregate_time', None)
+
+        if agg_by in ['iso', 'adm1', 'adm2', 'global']:
+            agg_admin = agg_by
+        if agg_by in ['day', 'week', 'month', 'quarter', 'year']:
+            agg_time = agg_by
 
         if not data['data']:
             return []
@@ -27,16 +35,19 @@ class SummaryService(object):
         else:
             df = pd.DataFrame(data['data'])
             df = df.rename(columns={'SUM(alerts)': 'alerts'})
+            group_by_list = None
 
             if agg_values:
-                if agg_by in ['adm1', 'adm2', 'iso']:
+                if agg_admin in ['adm1', 'adm2', 'iso']:
                     groupby_dict = {'iso': ['iso'], 'adm1': ['adm1'], 'adm2': ['adm1', 'adm2']}
                     if iso_code == 'global':
                         groupby_dict['adm1'] = ['iso', 'adm1']
-                    logging.info("\n********DF: {} \n".format(df.head()))
-                    grouped = df.groupby(groupby_dict[agg_by]).sum()['alerts'].reset_index()
 
-                else:
+                    group_by_list = groupby_dict[agg_admin]
+
+                    logging.info("\n********DF: {} \n".format(df.head()))
+
+                if agg_time:
                     # convert from unix to datetime
                     df['fire_date_format'] = pd.to_datetime(df.alert_date, unit='ms')
 
@@ -48,18 +59,21 @@ class SummaryService(object):
                     df['day'] = df.fire_date_format.dt.strftime('%Y-%m-%d')
 
                     # start the list of columns to groupby
-                    groupby_list = ['year']
+                    if not group_by_list:
+                        group_by_list = ['year']
+                    else:
+                        group_by_list.append('year')
 
                     # return string formatted day value if day summary requested
-                    logging.info('AGGBY: {}'.format(agg_by))
-                    if agg_by != 'year' and agg_by != "None":
-                        groupby_list.append(agg_by)
 
-                    logging.info("GROUPBY LIST: {}".format(groupby_list))
-                    grouped = df.groupby(groupby_list).sum()['alerts'].reset_index()
-                    grouped.sort_values(by=groupby_list)
-                    grouped['iso'] = iso_code
+                    if agg_time != 'year' and agg_time != "None":
+                        group_by_list.append(agg_time)
 
+                grouped = df.groupby(group_by_list).sum()['alerts'].reset_index()
+                grouped = grouped.sort_values(by=group_by_list)
+                # grouped['iso'] = iso_code
+
+                # grouped = df.groupby(groupby_dict[agg_admin]).sum()['alerts'].reset_index()
             else:
                 grouped = df
 

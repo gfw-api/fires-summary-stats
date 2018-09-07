@@ -36,11 +36,16 @@ def serialize_response(dataset_name, request, fire_count_response, polyname):
     else:
         field_val = request.args.get(field_name, default_val)
 
+    agg_values = request.args.get('aggregate_values', None)
+    if agg_values == 'True':
+        agg_values = True
+
     return {
         'data': {
             'polyname' : polyname,
-            'aggregate_by': request.args.get('aggregate_by', None),
-            'aggregate_values': request.args.get('aggregate_values', None),
+            'aggregate_admin': request.args.get('aggregate_admin', None),
+            'aggregate_time': request.args.get('aggregate_time', None),
+            'aggregate_values': agg_values,
             'period': period,
             field_name: field_val,
             'attributes': {
