@@ -9,6 +9,7 @@ from fireSummary.validators import validate_args_fires, validate_args_glad
 from fireSummary.middleware import valid_input_boundaries
 from fireSummary.services import SummaryService, QueryConstructorService
 from fireSummary.serializers import serialize_response
+from fireSummary.errors import Error
 
 fires_endpoints = Blueprint('fires_endpoints', __name__)
 glad_endpoints = Blueprint('glad_endpoints', __name__)
@@ -26,7 +27,7 @@ def summarize_data(dataset_name, polyname, iso_code, adm1_code=None, adm2_code=N
         logging.info("\nSQL REQUEST: {}".format(sql))
 
         # get response from microservice
-        data = util.query_micoservice(sql, dataset_name)
+        data = util.query_microservice(sql, dataset_name)
         # aggregate data
         # now that actual querying is done, replace gadm28 with admin
         if polyname == 'gadm28':
@@ -48,8 +49,7 @@ def summarize_data(dataset_name, polyname, iso_code, adm1_code=None, adm2_code=N
 @fires_endpoints.route('/summary-stats/<polyname>/<iso_code>/<adm1_code>/<adm2_code>', methods=['GET'])
 @validate_args_fires
 def fires_polyname_iso(polyname, iso_code, adm1_code=None, adm2_code=None):
-    dataset_name = 'fires'
-    return jsonify(summarize_data(dataset_name, polyname, iso_code, adm1_code, adm2_code))
+    return jsonify(summarize_data('fires', polyname, iso_code, adm1_code, adm2_code))
 
 
 @glad_endpoints.route('/summary-stats/admin/<iso_code>', methods=['GET'])
@@ -57,5 +57,15 @@ def fires_polyname_iso(polyname, iso_code, adm1_code=None, adm2_code=None):
 @glad_endpoints.route('/summary-stats/admin/<iso_code>/<adm1_code>/<adm2_code>', methods=['GET'])
 @validate_args_glad
 def glad_polyname_iso(iso_code, adm1_code=None, adm2_code=None):
-    dataset_name = 'glad'
-    return jsonify(summarize_data(dataset_name, 'admin', iso_code, adm1_code, adm2_code))
+    return jsonify(summarize_data('glad', 'admin', iso_code, adm1_code, adm2_code))
+
+
+@glad_endpoints.errorhandler(Error)
+def handle_error(error):
+    return error.serialize
+
+
+@fires_endpoints.errorhandler(Error)
+def handle_error(error):
+    return error.serialize
+
