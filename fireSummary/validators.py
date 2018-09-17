@@ -65,8 +65,8 @@ def validate_args_fires(func):
 
         validate_aggregate(iso)
 
-        validate_period()
-
+        validate_period(2001)
+        
         return func(*args, **kwargs)
 
     return wrapper
@@ -104,19 +104,18 @@ def validate_args_glad(func):
 
         validate_aggregate(iso)
 
-        validate_period()
+        validate_period(2015)
 
         return func(*args, **kwargs)
 
     return wrapper
 
 
-def validate_period():
+def validate_period(minYear):
 
     # validate period
     today = datetime.datetime.now()
     period = request.args.get('period', None)
-    minYear = 2001
     if period:
 
         if len(period.split(',')) < 2:
