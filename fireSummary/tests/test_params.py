@@ -31,43 +31,44 @@ class ParamsTest(unittest.TestCase):
 
         return error
 
-    # def test_quotes_in_period(self):
-    #     error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period="2013-01-01,2014-01-01"')
-    #
-    #     self.assertEqual(error_text, "Incorrect format, should be YYYY-MM-DD,YYYY-MM-DD (no quotes)")
-    #
-    # def test_bogus_period(self):
-    #     error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=2016-01-01,2013-01-01')
-    #
-    #     self.assertEqual(error_text, 'Start date must be less than end date')
-    #
-    # def test_one_period(self):
-    #     error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=2016-01-01')
-    #
-    #     self.assertEqual(error_text, 'Period needs 2 arguments')
-    #
-    # def test_wrong_period(self):
-    #     error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=2016-30-01,2016-01-01')
-    #
-    #     self.assertEqual(error_text, "Incorrect format, should be YYYY-MM-DD,YYYY-MM-DD")
-    #
-    # def test_early_period(self):
-    #     error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=1999-01-01,2016-01-01')
-    #
-    #     self.assertEqual(error_text, "Start date can't be earlier than 2001-01-01")
-    #
-    # def test_late_period(self):
-    #     error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=2013-01-01,2025-01-01')
-    #
-    #     today = datetime.datetime.now()
-    #     self.assertEqual(error_text, "End year can't be later than {}".format(today.year))
-    #
-    # def test_bad_global(self):
-    #     error_text = self.make_request('/api/v1/fire-alerts/summary-stats/wdpa/global/1')
-    #     self.assertEqual(error_text, "if requesting globally summarized statistics, you cannot choose additional "
-    #                                  "administrative units.")
-    #
-    # def test_bad_global_agg(self):
-    #     agg_list = ['day', 'week', 'quarter', 'month', 'year', 'adm1', 'iso']
-    #     error_text = self.make_request('/api/v1/fire-alerts/summary-stats/wdpa/global?aggregate_values=True&aggregate_by=adm2')
-    #     self.assertEqual(error_text, "aggregate_by must be specified as one of: {} ".format(", ".join(agg_list)))
+    def test_quotes_in_period(self):
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period="2013-01-01,2014-01-01"')
+
+        self.assertEqual(error_text, "Incorrect format, should be YYYY-MM-DD,YYYY-MM-DD (no quotes)")
+
+    def test_bogus_period(self):
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=2016-01-01,2013-01-01')
+
+        self.assertEqual(error_text, 'Start date must be less than end date')
+
+    def test_one_period(self):
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=2016-01-01')
+
+        self.assertEqual(error_text, 'Period needs 2 arguments')
+
+    def test_wrong_period(self):
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=2016-30-01,2016-01-01')
+
+        self.assertEqual(error_text, "Incorrect format, should be YYYY-MM-DD,YYYY-MM-DD")
+
+    def test_early_period(self):
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=1999-01-01,2016-01-01')
+
+        self.assertEqual(error_text, "Start date can't be earlier than 2001-01-01")
+
+    def test_late_period(self):
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?period=2013-01-01,2025-01-01')
+
+        today = datetime.datetime.now()
+        self.assertEqual(error_text, "End year can't be later than {}".format(today.year))
+
+    def test_bad_global(self):
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/wdpa/global/1')
+        self.assertEqual(error_text, "if requesting globally summarized statistics, you cannot choose additional "
+                                     "administrative units.")
+
+    def test_bad_global_agg(self):
+        agg_list = ['day', 'week', 'quarter', 'month', 'year', 'adm1', 'iso']
+        error_text = self.make_request('/api/v1/fire-alerts/summary-stats/wdpa/global?aggregate_values=True&aggregate_by=adm2')
+        self.assertEqual(error_text, "aggregate_by or aggregate_time or "
+                                     "aggregate_admin must be specified as one of: {} ".format(", ".join(agg_list)))

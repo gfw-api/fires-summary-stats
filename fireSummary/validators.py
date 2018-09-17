@@ -176,7 +176,7 @@ def validate_aggregate(iso):
     input_agg_list = [x for x in [agg_by, agg_admin, agg_time] if x is not None]
 
     if input_agg_list and agg_values:
-        improper_agg_list = [x for x in input_agg_list if x.lower() not in valid_agg_list]
+        improper_agg_list = [x for x in input_agg_list if x not in valid_agg_list]
 
         if improper_agg_list:
             raise Error("aggregate_by or aggregate_time or aggregate_admin must be "
