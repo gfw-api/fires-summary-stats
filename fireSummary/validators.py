@@ -107,18 +107,11 @@ def validate_args_glad(func):
 def get_iso_info(params, poly_iso_adm1_adm2_combos):
 
     # validate iso/adm1/adm2 combo
-    iso = request.view_args.get('iso_code', None)
-    adm1 = request.view_args.get('adm1_code', None)
-    adm2 = request.view_args.get('adm2_code', None)
+    params['iso_code'] = request.view_args.get('iso_code', None)
+    params['adm1_code'] = request.view_args.get('adm1_code', None)
+    params['adm2_code'] = request.view_args.get('adm2_code', None)
 
-    params['iso_code'] = iso
-    params['adm1_code'] = adm1
-    params['adm2_code'] = adm2
-
-    input_combo = [iso, adm1, adm2]
-
-    # get rid of None's
-    input_combo = [x for x in input_combo if x is not None]
+    input_combo = util.filter_input_combo(params)
 
     # create list of valid admin combos, based on input combo
     input_len = len(input_combo) + 1

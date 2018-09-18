@@ -2,7 +2,7 @@ import datetime
 
 
 class QueryConstructorService(object):
-    """Class for formatting query and donwload sql"""
+    """Class for formatting query and download sql"""
 
     @staticmethod
     def format_dataset_query(dataset_name, params):
