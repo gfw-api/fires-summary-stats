@@ -8,21 +8,15 @@ class SummaryService(object):
     (day, week, month, year)"""
 
     @staticmethod
-    def create_time_table(dataset_name, data, polyname, request, iso_code):
+    def create_time_table(dataset_name, data, params):
 
-        fire_type = request.args.get('fire_type', 'all')
-        confidence = request.args.get('gladConfirmOnly', False)
 
-        if confidence == 'True':
-            confidence = True
-        if confidence == 'False':
-            confidence = False
-
-        agg_by = request.args.get('aggregate_by', False)
-        agg_values = request.args.get('aggregate_values', False)
-
-        agg_admin = request.args.get('aggregate_admin', None)
-        agg_time = request.args.get('aggregate_time', None)
+        agg_by = params['aggregate_by']
+        agg_values = params['aggregate_values']
+        agg_admin = params['aggregate_admin']
+        agg_time = params['aggregate_time']
+        iso_code = params['iso_code']
+        polyname = params['polyname']
 
         if agg_by in ['iso', 'adm1', 'adm2', 'global']:
             agg_admin = agg_by
@@ -65,7 +59,6 @@ class SummaryService(object):
                         group_by_list.append('year')
 
                     # return string formatted day value if day summary requested
-
                     if agg_time != 'year' and agg_time != "None":
                         group_by_list.append(agg_time)
 
@@ -79,11 +72,13 @@ class SummaryService(object):
 
             if iso_code != 'global':
                 grouped['iso'] = iso_code
+
             grouped['polyname'] = polyname
 
             if dataset_name == 'fires':
-                grouped['fire_type'] = fire_type.upper()
+                grouped['fire_type'] = params['fire_type'].upper() if params['fire_type'] else 'all'
             if dataset_name == 'glad':
-                grouped['gladConfirmOnly'] = confidence
+                grouped['gladConfirmOnly'] = params['gladConfirmOnly']
 
             return grouped.to_dict(orient='records')
+

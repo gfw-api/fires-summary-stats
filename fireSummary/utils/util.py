@@ -29,7 +29,13 @@ def query_microservice(sql, analysis_type):
         return response
 
 
-def load_valid_poly_iso():
-    with open('fireSummary/data/gadm28.json') as thedata:
-        return json.load(thedata)
+def load_valid_poly_iso(dataset_name):
 
+    if dataset_name == 'fires':
+        gadm_version = 28
+    else:
+        gadm_version = 36
+
+    gadm_src = 'fireSummary/data/gadm{}.json'.format(gadm_version)
+    with open(gadm_src) as thedata:
+        return json.load(thedata)
