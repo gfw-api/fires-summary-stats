@@ -108,8 +108,8 @@ def get_iso_info(params, poly_iso_adm1_adm2_combos):
 
     # validate iso/adm1/adm2 combo
     params['iso_code'] = request.view_args.get('iso_code', None)
-    params['adm1_code'] = request.view_args.get('adm1_code', None)
-    params['adm2_code'] = request.view_args.get('adm2_code', None)
+    params['adm1_code'] = int(request.view_args.get('adm1_code')) if request.view_args.get('adm1_code') else None
+    params['adm2_code'] = int(request.view_args.get('adm2_code')) if request.view_args.get('adm2_code') else None
 
     input_combo = util.filter_input_combo(params)
 
