@@ -2,26 +2,26 @@ import datetime
 
 
 class QueryConstructorService(object):
-    """Class for formatting query and donwload sql"""
+    """Class for formatting query and download sql"""
 
     @staticmethod
-    def format_dataset_query(dataset_name, request, polyname, iso_code, adm1_code=None, adm2_code=None):
+    def format_dataset_query(dataset_name, params):
 
-        # get parameters from query string. If none specific, default is set
-        today = datetime.datetime.today().strftime('%Y-%m-%d')
-        period = request.args.get('period', '2001-01-01,{}'.format(today))
-
-        agg_by = request.args.get('aggregate_by', False)
-        agg_values = request.args.get('aggregate_values', False)
-        agg_admin = request.args.get('aggregate_admin', None)
-        agg_time = request.args.get('aggregate_time', None)
-
+        agg_by = params['aggregate_by']
+        agg_values = params['aggregate_values']
+        agg_admin = params['aggregate_admin']
+        agg_time = params['aggregate_time']
+        polyname = params['polyname']
+        iso_code = params['iso_code']
+        adm1_code = params['adm1_code']
+        adm2_code = params['adm2_code']
+        
         if agg_by in ['iso', 'adm1', 'adm2', 'global']:
             agg_admin = agg_by
         if agg_by in ['day', 'week', 'month', 'quarter', 'year']:
             agg_time = agg_by
 
-        start_date, end_date = period.split(',')
+        start_date, end_date = params['period'].split(',')
 
         groupby_sql = None
         if agg_time == 'day':
@@ -99,15 +99,11 @@ class QueryConstructorService(object):
         if adm2_code:
             sql += " and adm2 = {}".format(adm2_code)
 
-        filter_dict = {'fires': 'fire_type', 'glad': 'gladConfirmOnly'}
-        filter_vals = request.args.get(filter_dict[dataset_name], None)
+        if dataset_name == 'fires' and params['fire_type']:
+            sql += " and fire_type = '{}'".format(params['fire_type'].upper())
 
-        if filter_vals:
-            if dataset_name == 'glad' and filter_vals == 'True':
-                sql += " and confidence = '3'"
-
-            if dataset_name == 'fires':
-                sql += " and {} = '{}'".format(filter_dict[dataset_name], filter_vals.upper())
+        if dataset_name == 'glad' and params['gladConfirmOnly']:
+            sql += " and confidence = '3'"
 
         # at the very end, add the GROUP BY statement
         if agg_values:
