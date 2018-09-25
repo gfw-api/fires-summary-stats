@@ -3,7 +3,7 @@ import json
 import logging
 import datetime
 
-from httmock import urlmatch, response, HTTMock
+from httmock import response, HTTMock, all_requests
 import pandas as pd
 
 from fireSummary import app
@@ -12,75 +12,44 @@ from fireSummary import app
 mock_headers = {'content-type': 'application/json'}
 
 
-@urlmatch(query=r'.*GROUP%20BY*%20.*alert_date$')
-def year_mock(url, request):
-    logging.debug('[TEST]: Found URL that matched adm1_alert_date_mock - mocking!')
-
-    # this loads a cached response from this query to the production API:
-    # SELECT alert_date, sum(alerts) FROM data WHERE polyname = 'gadm28' AND
-    # iso = 'IDN' AND (alert_date >= '2012-01-01' AND alert_date <= '2018-06-12') GROUP BY alert_date
-    # run on 2018-06-12
-    with open('fireSummary/tests/fixtures/fires_group_by_date_adm2.json') as src:
-        content = json.load(src)
-
-    return response(200, content, mock_headers, None, 5, request)
+@all_requests
+def adm1_alert_date_mock(url, request):
+    return load_src_json('fireSummary/tests/fixtures/fires_group_by_date_adm2.json')
 
 
-# regex here to match GROUP BY adm1 or adm2
-@urlmatch(query=r'.*GROUP%20BY%20adm1$')
+@all_requests
 def adm1_mock(url, request):
-    logging.debug('[TEST]: Found URL that matched adm1_mock - mocking!')
-
-    # this loads a cached response from this query to the production API:
-    # SELECT adm1, adm2, sum(alerts) FROM data WHERE polyname = 'gadm28' AND 
-    # iso = 'IDN' AND (alert_date >= '2012-01-01' AND alert_date <= '2018-06-12') GROUP BY adm1, adm2
-    # run on 2018-06-12
-    with open('fireSummary/tests/fixtures/adm2_response.json') as src:
-        content = json.load(src)
-
-    return response(200, content, mock_headers, None, 5, request)
+    return load_src_json('fireSummary/tests/fixtures/adm2_response.json')
 
 
-# regex here to match GROUP BY adm1 or adm2
-@urlmatch(query=r'.*GROUP%20BY%20adm1,%20adm2')
+@all_requests
 def adm2_mock(url, request):
-    logging.debug('[TEST]: Found URL that matched adm2_mock - mocking!')
-
-    # this loads a cached response from this query to the production API:
-    # SELECT adm1, adm2, sum(alerts) FROM data WHERE polyname = 'gadm28' AND
-    # iso = 'IDN' AND (alert_date >= '2012-01-01' AND alert_date <= '2018-06-12') GROUP BY adm1, adm2
-    # run on 2018-06-12
-    with open('fireSummary/tests/fixtures/adm2_response.json') as src:
-        content = json.load(src)
-
-    return response(200, content, mock_headers, None, 5, request)
+    return load_src_json('fireSummary/tests/fixtures/adm2_response.json')
 
 
-# regex here to match GROUP BY iso and global query
-@urlmatch(query=r'.*GROUP%20BY%20iso$')
+@all_requests
 def iso_mock(url, request):
-    logging.debug('[TEST]: Found URL that matched iso_mock - mocking!')
-
-    # this loads a cached response from this query to the production API:
-    # "SELECT iso, SUM(alerts) FROM data WHERE polyname = 'wdpa' GROUP BY iso"
-    with open('fireSummary/tests/fixtures/global_response.json') as src:
-        content = json.load(src)
-
-    return response(200, content, mock_headers, None, 5, request)
+    return load_src_json('fireSummary/tests/fixtures/global_response.json')
 
 
-# regex here to match GROUP BY adm1 and global query
-@urlmatch(query=r'.*GROUP%20BY%20iso.*adm1')
+@all_requests
 def iso_adm1_mock(url, request):
-    logging.debug('[TEST]: Found URL that matched global_adm1_mock - mocking!')
+    return load_src_json('fireSummary/tests/fixtures/adm1_response.json')
 
-    # this loads a cached response from this query to the production API:
-    # "SELECT iso, SUM(alerts) FROM data WHERE polyname = 'wdpa' GROUP BY iso"
-    with open('fireSummary/tests/fixtures/adm1_response.json') as src:
+
+@all_requests
+def iso_adm1_total_mock(url, request):
+    return load_src_json('fireSummary/tests/fixtures/IDN_response.json')
+
+
+def load_src_json(src_json):
+
+    logging.debug('[TEST]: loading mock response from {}'.format(src_json))
+    with open(src_json) as src:
         content = json.load(src)
 
-    return response(200, content, mock_headers, None, 5, request)
-
+    return response(200, content, mock_headers)
+    
 
 class SummaryTest(unittest.TestCase):
 
@@ -97,24 +66,15 @@ class SummaryTest(unittest.TestCase):
 
         self.default_date_range = pd.date_range(self.min_date, self.max_date)
 
-
     def tearDown(self):
         pass
 
-    def deserialize_data(self, response):
-        return json.loads(response.data)['data']['attributes']['value']
-
     def make_request(self, request):
 
-        with HTTMock(year_mock):
-            with HTTMock(adm1_mock):
-                with HTTMock(adm2_mock):
-                    with HTTMock(iso_mock):
-                        with HTTMock(iso_adm1_mock):
-                            response = self.app.get(request, follow_redirects=True)
-                            data = self.deserialize_data(response)
-
-                            return data
+        # rstrip is important - seems like httmock doesn't work if a trailing slash is added
+        # which is awkward . . . this is a library designed to mock web requests after all
+        response = self.app.get(request.rstrip('/'), follow_redirects=True)
+        return json.loads(response.data)['data']['attributes']['value']
 
     def find_alert_date(self, alert_response, alert_date_aoi, alert_date_type=None, alert_year=None, adm1_val=None):
         # now that we're filling in missing dates, can't rely on indexes to
@@ -157,13 +117,26 @@ class SummaryTest(unittest.TestCase):
         return len(grouped)
 
     def test_zero_fires_groupby(self):
+        # nothing to mock here - first checks poly/iso combos and not finding USA & mining, returns None
+        # even before it gets to dataset query stuff
         data = self.make_request('/api/v1/fire-alerts/summary-stats/mining/USA?aggregate_values=True&aggregate_by=day')
 
         # check that we return Null instead of 0 - this poly/iso combo doesn't exist
         self.assertEqual(data, None)
 
+    def test_adm1_stats(self):
+        # simple test - mostly to make sure that simple SUM() queries working
+        # and that IDN/1 is a valid endpoint
+
+        with HTTMock(iso_adm1_total_mock):
+            data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN/1/')
+
+        self.assertEqual(data[0]['alerts'], 28514)
+
     def test_group_by_day(self):
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=day')
+
+        with HTTMock(adm1_alert_date_mock):
+            data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=day')
 
         # should have one result for each day between 2001-01-01 and today
         self.assertEqual(len(data), len(self.default_date_range))
@@ -177,7 +150,9 @@ class SummaryTest(unittest.TestCase):
         self.assertEqual(data_aoi['alerts'], 906)
 
     def test_group_by_week(self):
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=week')
+
+        with HTTMock(adm1_alert_date_mock):
+            data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=week')
 
         # check that we have the correct # of weeks
         self.assertEqual(len(data), self.count_time_intervals('week'))
@@ -191,7 +166,9 @@ class SummaryTest(unittest.TestCase):
         self.assertEqual(data_aoi['alerts'], 4561)
 
     def test_group_by_quarter(self):
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=quarter')
+
+        with HTTMock(adm1_alert_date_mock):
+            data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=quarter')
 
         # check that we have the proper # of quarters
         self.assertEqual(len(data), self.count_time_intervals('quarter'))
@@ -205,7 +182,9 @@ class SummaryTest(unittest.TestCase):
         self.assertEqual(data_aoi['alerts'], 83976)
 
     def test_group_by_month(self):
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=month')
+
+        with HTTMock(adm1_alert_date_mock):
+            data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=month')
 
         # check that we have the proper # of months
         self.assertEqual(len(data), self.count_time_intervals('month'))
@@ -219,7 +198,9 @@ class SummaryTest(unittest.TestCase):
         self.assertEqual(data[-1]['alerts'], 6226)
 
     def test_group_by_year(self):
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=year')
+
+        with HTTMock(adm1_alert_date_mock):
+            data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=year')
 
         # check that we have the proper # of years
         self.assertEqual(len(data), self.count_time_intervals('year'))
@@ -234,7 +215,8 @@ class SummaryTest(unittest.TestCase):
 
     def test_group_by_adm1(self):
 
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=adm1')
+        with HTTMock(adm1_mock):
+            data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=adm1')
 
         # check that we have 34 rows - one for each adm1 in IDN
         self.assertEqual(len(data), 34)
@@ -249,7 +231,8 @@ class SummaryTest(unittest.TestCase):
 
     def test_group_by_adm2(self):
 
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=adm2')
+        with HTTMock(adm2_mock):
+            data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=adm2')
 
         # check that we have 436 rows - one for each adm2 in IDN
         self.assertEqual(len(data), 436)
@@ -264,7 +247,8 @@ class SummaryTest(unittest.TestCase):
 
     def test_global_group_by_iso(self):
 
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/global?aggregate_values=True&aggregate_by=iso')
+        with HTTMock(iso_mock):
+            data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/global?aggregate_values=True&aggregate_by=iso')
 
         # check that we have 257 rows - one for each ISO
         # NB - this includes ISOs that we don't have any fire data for
@@ -280,7 +264,8 @@ class SummaryTest(unittest.TestCase):
 
     def test_global_group_by_adm1(self):
 
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/global?aggregate_values=True&aggregate_by=adm1')
+        with HTTMock(iso_adm1_mock):
+            data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/global?aggregate_values=True&aggregate_by=adm1')
 
         # check that we have 34 rows - one for each ISO/adm1 combo
         self.assertEqual(len(data), 34)
@@ -295,7 +280,8 @@ class SummaryTest(unittest.TestCase):
 
     def test_group_by_day_adm1(self):
 
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_admin=adm1&aggregate_time=day')
+        with HTTMock(adm1_alert_date_mock):
+            data = self.make_request('/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_admin=adm1&aggregate_time=day')
 
         # calculate # of days 2001-01-01 to present
         # multiplied by 34 adm1 areas
