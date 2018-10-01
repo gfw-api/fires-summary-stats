@@ -195,7 +195,7 @@ class SummaryTest(unittest.TestCase):
 
         # and the last
         data_aoi = self.find_alert_date(data, 9, 'month', 2018)
-        self.assertEqual(data[-1]['alerts'], 6226)
+        self.assertEqual(data[-1]['alerts'], 0)
 
     def test_group_by_year(self):
 
