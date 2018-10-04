@@ -13,9 +13,9 @@ develop:
     CT_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4MjBhZDk0NjlhMDI4Nzk4MmY0Y2QxOCIsInByb3ZpZGVyIjoibG9jYWwiLCJwcm92aWRlcklkIjpudWxsLCJlbWFpbCI6InNlcmdpby5nb3JkaWxsb0B2aXp6dWFsaXR5LmNvbSIsInJvbGUiOiJBRE1JTiIsImNyZWF0ZWRBdCI6IjIwMTYtMTEtMDdUMTY6MzY6MzYuODY4WiIsImV4dHJhVXNlckRhdGEiOnsiYXBwcyI6WyJnZnciLCJwcmVwIiwiYXF1ZWR1Y3QiLCJmb3Jlc3QtYXRsYXMiLCJydyIsImRhdGE0c2RnIl19fQ.3GzuhG8wD4gI5Fo6NTqHC_Dq6ChKPPWXygga2mAuKZw
     LOCAL_URL: http://mymachine:5700
     API_VERSION: v1
-    FIRES_DATASET_ID: 3267be92-733f-45e4-bf81-be5a2b33112c
-    GLAD_DATASET_ID: 026d1469-8cc0-4f68-a88e-16eceb790aa6
+    FIRES_DATASET_ID: 0da6d8d5-ba19-46ec-840f-3e3dd8b8ada2
+    GLAD_DATASET_ID: e417a349-2692-42a4-a7cc-79804ebc158e
   command: develop
   volumes:
     - ./fireSummary:/opt/fireSummary/fireSummary
-  restart: always
+  restart: on-failure
