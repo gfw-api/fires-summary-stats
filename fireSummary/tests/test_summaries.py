@@ -117,9 +117,9 @@ class SummaryTest(unittest.TestCase):
         return len(grouped)
 
     def test_zero_fires_groupby(self):
-        # nothing to mock here - first checks poly/iso combos and not finding USA & mining, returns None
+        # nothing to mock here - first checks poly/iso combos and not finding DEU & mining, returns None
         # even before it gets to dataset query stuff
-        data = self.make_request('/api/v1/fire-alerts/summary-stats/mining/USA?aggregate_values=True&aggregate_by=day')
+        data = self.make_request('/api/v1/fire-alerts/summary-stats/mining/DEU?aggregate_values=True&aggregate_by=day')
 
         # check that we return Null instead of 0 - this poly/iso combo doesn't exist
         self.assertEqual(data, None)
