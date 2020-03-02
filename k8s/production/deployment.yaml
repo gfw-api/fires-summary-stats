@@ -2,9 +2,9 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    name: {name}
+    name: fires-summary-stats
     app: gfw
-  name: {name}
+  name: fires-summary-stats
 spec:
   revisionHistoryLimit: 2
   template:
@@ -12,11 +12,11 @@ spec:
       annotations:
         chaos.alpha.kubernetes.io/enabled: "true"
       labels:
-        name: {name}
+        name: fires-summary-stats
     spec:
       containers:
-      - name: {name}
-        image: vizzuality/{name}
+      - name: fires-summary-stats
+        image: vizzuality/fires-summary-stats
         imagePullPolicy: Always
         resources:
           requests:
@@ -31,7 +31,7 @@ spec:
           - name: ENVIRONMENT
             value: prod
           - name: LOCAL_URL
-            value: http://{name}.default.svc.cluster.local:5700
+            value: http://fires-summary-stats.default.svc.cluster.local:5700
           - name: CT_URL
             valueFrom:
                 secretKeyRef:
