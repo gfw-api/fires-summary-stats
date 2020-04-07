@@ -123,6 +123,13 @@
             "type": "string"
           },
           {
+            "name": "adm1_code",
+            "in": "path",
+            "description": "Admin level 1 code",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "period",
             "in": "query",
             "description": "Time period in format\n```YYYY-MM-DD,YYYY-MM-DD``` (if not specified, returns count for entire date range)",
@@ -201,6 +208,20 @@
             "name": "iso_code",
             "in": "path",
             "description": "ISO code",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "adm1_code",
+            "in": "path",
+            "description": "Admin level 1 code",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "adm2_code",
+            "in": "path",
+            "description": "Admin level 2 code",
             "required": true,
             "type": "string"
           },
