@@ -8,6 +8,9 @@ Query MODIS and VIIRS fire alerts with the [Global Forest Watch (GFW)](http://gl
 - Summarize analysis results by day, week, month, quarter or year
 - Get dataset date range/ latest date
 
+Dependencies on other Microservices:
+- [Query](https://github.com/resource-watch/query/)
+
 ## API Endpoints
 For endpoint documentation, please visit our [API documentation page for Fires](https://production-api.globalforestwatch.org/documentation/#/?tags=Fires)
 
