@@ -56,7 +56,7 @@ class SQLTest(unittest.TestCase):
 
         sql = QueryConstructorService.format_dataset_query(self.dataset_name, params)
 
-        correct_sql = "SELECT SUM(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
+        correct_sql = "SELECT SUM(alerts) as alerts FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2012-01-01' AND alert_date <= '2015-01-01')"
 
         self.assertEqual(sql, correct_sql)
@@ -70,7 +70,7 @@ class SQLTest(unittest.TestCase):
         params = self.build_params(**kwargs)
         sql = QueryConstructorService.format_dataset_query(self.dataset_name, params)
 
-        correct_sql = "SELECT SUM(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
+        correct_sql = "SELECT SUM(alerts) as alerts FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2001-01-01' AND alert_date <= '{}')".format(self.today)
 
         self.assertEqual(sql, correct_sql)
@@ -86,7 +86,7 @@ class SQLTest(unittest.TestCase):
         params = self.build_params(**kwargs)
         sql = QueryConstructorService.format_dataset_query(self.dataset_name, params)
 
-        correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
+        correct_sql = "SELECT SUM(alerts) as alerts, alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2001-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(self.today)
 
         self.assertEqual(sql, correct_sql)
@@ -102,7 +102,7 @@ class SQLTest(unittest.TestCase):
         params = self.build_params(**kwargs)
         sql = QueryConstructorService.format_dataset_query(self.dataset_name, params)
 
-        correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
+        correct_sql = "SELECT SUM(alerts) as alerts, alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2001-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(self.today)
 
         self.assertEqual(sql, correct_sql)
@@ -118,7 +118,7 @@ class SQLTest(unittest.TestCase):
         params = self.build_params(**kwargs)
         sql = QueryConstructorService.format_dataset_query(self.dataset_name, params)
 
-        correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
+        correct_sql = "SELECT SUM(alerts) as alerts, alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2001-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(self.today)
 
         self.assertEqual(sql, correct_sql)
@@ -134,7 +134,7 @@ class SQLTest(unittest.TestCase):
         params = self.build_params(**kwargs)
         sql = QueryConstructorService.format_dataset_query(self.dataset_name, params)
 
-        correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
+        correct_sql = "SELECT SUM(alerts) as alerts, alert_date FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2001-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(self.today)
 
         self.assertEqual(sql, correct_sql)
@@ -150,7 +150,7 @@ class SQLTest(unittest.TestCase):
         params = self.build_params(**kwargs)
         sql = QueryConstructorService.format_dataset_query(self.dataset_name, params)
 
-        correct_sql = "SELECT SUM(alerts), adm1 FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
+        correct_sql = "SELECT SUM(alerts) as alerts, adm1 FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2001-01-01' AND alert_date <= '{}') GROUP BY adm1".format(self.today)
 
         self.assertEqual(sql, correct_sql)
@@ -166,7 +166,7 @@ class SQLTest(unittest.TestCase):
         params = self.build_params(**kwargs)
         sql = QueryConstructorService.format_dataset_query(self.dataset_name, params)
 
-        correct_sql = "SELECT SUM(alerts), adm1, adm2 FROM data WHERE polyname = 'admin' AND iso = 'IDN' " \
+        correct_sql = "SELECT SUM(alerts) as alerts, adm1, adm2 FROM data WHERE polyname = 'admin' AND iso = 'IDN' " \
                       "AND (alert_date >= '2001-01-01' AND alert_date <= '{}') " \
                       "GROUP BY adm1, adm2".format(self.today)
 
@@ -183,7 +183,7 @@ class SQLTest(unittest.TestCase):
         params = self.build_params(**kwargs)
         sql = QueryConstructorService.format_dataset_query(self.dataset_name, params)
 
-        correct_sql = "SELECT SUM(alerts) FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
+        correct_sql = "SELECT SUM(alerts) as alerts FROM data WHERE polyname = 'admin' AND iso = 'IDN' AND " \
                       "(alert_date >= '2001-01-01' AND alert_date <= '{}') and fire_type = 'MODIS'".format(self.today)
 
         self.assertEqual(sql, correct_sql)
@@ -199,7 +199,7 @@ class SQLTest(unittest.TestCase):
         params = self.build_params(**kwargs)
         sql = QueryConstructorService.format_dataset_query(self.dataset_name, params)
 
-        correct_sql = "SELECT SUM(alerts), alert_date FROM data WHERE polyname = 'admin' AND " \
+        correct_sql = "SELECT SUM(alerts) as alerts, alert_date FROM data WHERE polyname = 'admin' AND " \
                       "(alert_date >= '2001-01-01' AND alert_date <= '{}') GROUP BY alert_date".format(self.today)
 
         self.assertEqual(sql, correct_sql)
@@ -217,7 +217,7 @@ class SQLTest(unittest.TestCase):
         sql = QueryConstructorService.format_dataset_query(self.dataset_name, params)
 
         correct_sql = \
-            "SELECT SUM(alerts), adm1, alert_date " \
+            "SELECT SUM(alerts) as alerts, adm1, alert_date " \
             "FROM data " \
             "WHERE polyname = 'admin' AND iso = 'IDN' " \
             "AND (alert_date >= '2001-01-01' AND alert_date <= '{}') " \
