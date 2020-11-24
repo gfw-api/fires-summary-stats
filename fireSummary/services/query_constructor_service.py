@@ -27,7 +27,7 @@ class QueryConstructorService(object):
         if agg_time == 'day':
             agg_time = 'alert_date'
 
-        select_statement = "SELECT SUM(alerts)"
+        select_statement = "SELECT SUM(alerts) as alerts"
         if dataset_name == 'fires':
             where_statement = "WHERE polyname = '{}' AND ".format(polyname)
         else:

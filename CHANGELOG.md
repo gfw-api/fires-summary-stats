@@ -1,3 +1,7 @@
+## 24/11/2020
+
+- Fix issue with GLAD summary stats endpoint.
+
 # 1.1.0
 
 ## 09/04/2020
