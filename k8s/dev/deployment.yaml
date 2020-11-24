@@ -39,7 +39,7 @@ spec:
         - name: PORT
           value: "5700"
         - name: ENVIRONMENT
-          value: staging
+          value: dev
         - name: LOCAL_URL
           value: http://fires-summary-stats.default.svc.cluster.local:5700
         - name: CT_URL

@@ -1,14 +1,26 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
+  creationTimestamp: null
   labels:
-    name: fires-summary-stats
     app: gfw
+    name: fires-summary-stats
   name: fires-summary-stats
 spec:
+  progressDeadlineSeconds: 2147483647
+  replicas: 1
   revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      name: fires-summary-stats
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
+      creationTimestamp: null
       labels:
         name: fires-summary-stats
     spec:
@@ -16,57 +28,63 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-              - matchExpressions:
-                  - key: type
-                    operator: In
-                    values:
-                      - apps
+            - matchExpressions:
+              - key: type
+                operator: In
+                values:
+                - apps
       containers:
-      - name: fires-summary-stats
+      - args:
+        - start
+        env:
+        - name: PORT
+          value: "5700"
+        - name: ENVIRONMENT
+          value: prod
+        - name: LOCAL_URL
+          value: http://fires-summary-stats.default.svc.cluster.local:5700
+        - name: CT_URL
+          valueFrom:
+            secretKeyRef:
+              key: CT_URL
+              name: mssecrets
+        - name: CT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: CT_TOKEN
+              name: mssecrets
+        - name: CT_REGISTER_MODE
+          valueFrom:
+            secretKeyRef:
+              key: CT_REGISTER_MODE
+              name: mssecrets
+        - name: API_VERSION
+          valueFrom:
+            secretKeyRef:
+              key: API_VERSION
+              name: mssecrets
+        - name: FIRES_DATASET_ID
+          value: 4145f642-5455-4414-b214-58ad39b83e1e
+        - name: GLAD_DATASET_ID
+          value: 63e88e53-0a88-416e-9532-fa06f703d435
         image: vizzuality/fires-summary-stats
         imagePullPolicy: Always
+        name: fires-summary-stats
+        ports:
+        - containerPort: 5700
+          protocol: TCP
         resources:
-          requests:
-            cpu: "0.25"
-            memory: "128Mi"
           limits:
             cpu: "1"
-            memory: "512Mi"
-        args:
-          - start
-        env:
-          - name: PORT
-            value: "5700"
-          - name: ENVIRONMENT
-            value: prod
-          - name: LOCAL_URL
-            value: http://fires-summary-stats.default.svc.cluster.local:5700
-          - name: CT_URL
-            valueFrom:
-                secretKeyRef:
-                  name: mssecrets
-                  key: CT_URL
-          - name: CT_TOKEN
-            valueFrom:
-                secretKeyRef:
-                  name: mssecrets
-                  key: CT_TOKEN
-          - name: CT_REGISTER_MODE
-            valueFrom:
-                secretKeyRef:
-                  name: mssecrets
-                  key: CT_REGISTER_MODE
-          - name: API_VERSION
-            valueFrom:
-                secretKeyRef:
-                  name: mssecrets
-                  key: API_VERSION
-          - name: FIRES_DATASET_ID
-            value: 4145f642-5455-4414-b214-58ad39b83e1e
-          - name: GLAD_DATASET_ID
-            value: 63e88e53-0a88-416e-9532-fa06f703d435
-
-        ports:
-          - containerPort: 5700
-
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 128Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
       restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status: {}
