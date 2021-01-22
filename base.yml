@@ -1,7 +1,0 @@
-base:
-  build: .
-  ports:
-    - "5700:5700"
-  env_file:
-    - prod.env
-  container_name: fire-summary-stats

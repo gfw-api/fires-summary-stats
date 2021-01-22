@@ -1,16 +1,16 @@
-develop:
-  extends:
-    file: base.yml
-    service: base
-  ports:
-    - "35733:35730"
-  container_name: python-skeleton-develop
-  environment:
-    CT_REGISTER_MODE: auto
-    ENVIRONMENT: dev
-    DEBUG: "True"
-    API_VERSION: v1
-  command: develop
-  volumes:
-    - ./fireSummary:/opt/fireSummary/fireSummary
-  restart: on-failure
+version: "3"
+services:
+  develop:
+    build: .
+    ports:
+      - "35733:35730"
+    container_name: fire-summary-stats-develop
+    environment:
+      CT_REGISTER_MODE: auto
+      ENVIRONMENT: dev
+      DEBUG: "True"
+      API_VERSION: v1
+    command: develop
+    volumes:
+      - ./fireSummary:/opt/fireSummary/fireSummary
+    restart: on-failure

@@ -8,7 +8,7 @@ from fireSummary.config import SETTINGS
 from fireSummary.routes.api import error
 from fireSummary.routes.api.v1 import fires_endpoints, glad_endpoints
 from fireSummary.utils.files import load_config_json
-import CTRegisterMicroserviceFlask
+import RWAPIMicroservicePython
 
 logging.basicConfig(
     level=SETTINGS.get('logging', {}).get('level'),
@@ -25,14 +25,16 @@ app.register_blueprint(glad_endpoints, url_prefix='/api/v1/glad-alerts')
 # CT
 info = load_config_json('register')
 swagger = load_config_json('swagger')
-CTRegisterMicroserviceFlask.register(
+RWAPIMicroservicePython.register(
     app=app,
     name='fireSummary',
     info=info,
     swagger=swagger,
-    mode=CTRegisterMicroserviceFlask.AUTOREGISTER_MODE if os.getenv('CT_REGISTER_MODE') and os.getenv('CT_REGISTER_MODE') == 'auto' else CTRegisterMicroserviceFlask.NORMAL_MODE,
+    mode=RWAPIMicroservicePython.AUTOREGISTER_MODE if os.getenv('CT_REGISTER_MODE') and os.getenv('CT_REGISTER_MODE') == 'auto' else RWAPIMicroservicePython.NORMAL_MODE,
     ct_url=os.getenv('CT_URL'),
-    url=os.getenv('LOCAL_URL')
+    url=os.getenv('LOCAL_URL'),
+    token=os.getenv('CT_TOKEN'),
+    api_version=os.getenv('API_VERSION')
 )
 
 

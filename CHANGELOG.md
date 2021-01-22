@@ -1,3 +1,7 @@
+## 22/01/2021
+
+- Replace CT integration library
+
 ## 24/11/2020
 
 - Fix issue with GLAD summary stats endpoint.
