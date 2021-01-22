@@ -1,5 +1,8 @@
 # Fires Summary Microservice Overview
 
+[![Build Status](https://travis-ci.com/gfw-api/fires-summary-stats.svg?branch=dev)](https://travis-ci.com/gfw-api/fires-summary-stats)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/991ade88cf1913c0ecd9/test_coverage)](https://codeclimate.com/github/gfw-api/fires-summary-stats/test_coverage)
+
 Query MODIS and VIIRS fire alerts with the [Global Forest Watch (GFW)](http://globalforestwatch.org) API
 
 - Analyze datasets by Country, State and Districts (defined by the [GADM Database](http://www.gadm.org/))
