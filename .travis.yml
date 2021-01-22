@@ -7,7 +7,7 @@ install:
     - pip install -r requirements_dev.txt --use-feature=2020-resolver
 env:
   global:
-    - CC_TEST_REPORTER_ID=
+    - CC_TEST_REPORTER_ID=5d1d81537d56a896d356e716982603016164a10d6eb228745775832c30720977
     - CT_REGISTER_MODE=False
     - PORT=5037
     - API_VERSION=v1
