@@ -64,7 +64,7 @@ spec:
           value: f77d9907-c082-443f-a58f-0b26634c4ca3
         - name: GLAD_DATASET_ID
           value: dfba90df-77a3-4c80-8e62-493430cbaf3d
-        image: vizzuality/fires-summary-stats
+        image: gfwdockerhub/fires-summary-stats
         imagePullPolicy: Always
         name: fires-summary-stats
         ports:
