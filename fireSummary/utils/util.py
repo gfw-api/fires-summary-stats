@@ -9,8 +9,6 @@ from fireSummary.errors import Error
 
 
 def query_microservice(sql, analysis_type, api_key):
-def query_microservice(sql, analysis_type):
-
     if analysis_type == 'glad':
         dataset_id = os.getenv('GLAD_DATASET_ID')
     elif analysis_type == 'fires':
