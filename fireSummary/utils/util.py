@@ -8,6 +8,7 @@ from RWAPIMicroservicePython import request_to_microservice
 from fireSummary.errors import Error
 
 
+def query_microservice(sql, analysis_type, api_key):
 def query_microservice(sql, analysis_type):
 
     if analysis_type == 'glad':
@@ -17,12 +18,8 @@ def query_microservice(sql, analysis_type):
     else:
         raise Error('unknown analyis type: {}'.format(analysis_type))
 
-    config = {
-        'uri': '/query/{}?sql={}'.format(dataset_id, sql),
-        'method': 'GET',
-    }
-
-    response = request_to_microservice(config)
+    uri = f"/v1/query/{dataset_id}?sql={sql}"
+    response = request_to_microservice(uri=uri, api_key=api_key, method="GET")
 
     if response.get('errors'):
         raise Error(**response['errors'][0])

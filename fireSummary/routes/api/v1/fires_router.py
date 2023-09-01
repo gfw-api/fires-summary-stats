@@ -30,7 +30,9 @@ def summarize_data(dataset_name, params, is_valid_combo):
         logging.info("\nSQL REQUEST: {}".format(sql))
 
         # get response from microservice
-        data = util.query_microservice(sql, dataset_name)
+        data = util.query_microservice(
+            sql, dataset_name, request.headers.get("x-api-key")
+        )
 
         # now that actual querying is done, replace gadm28 with admin
         if params['polyname'] == 'gadm28':

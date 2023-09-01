@@ -12,7 +12,7 @@ def mock_query(mocker, response):
         re.compile(".*query/None*."),
         request_headers={
             "content-type": "application/json",
-            # "x-api-key": "api-key-test",
+            "x-api-key": "api-key-test",
         },
         json=response,
     )

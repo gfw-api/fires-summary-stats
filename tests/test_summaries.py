@@ -1,3 +1,4 @@
+import os
 import requests_mock
 from moto import mock_logs
 from RWAPIMicroservicePython.test_utils import mock_request_validation
@@ -21,7 +22,6 @@ mock_headers = {"content-type": "application/json"}
 def test_zero_fires_groupby(client):
     # nothing to mock here - first checks poly/iso combos and not finding DEU & mining, returns None
     # even before it gets to dataset query stuff
-    # mock_query(mocker, india_alerts)
     response = client.get(
         "/api/v1/fire-alerts/summary-stats/mining/DEU?aggregate_values=True&aggregate_by=day",
         follow_redirects=True,
@@ -38,9 +38,14 @@ def test_adm1_stats(client, mocker):
     # and that IDN/1 is a valid endpoint
 
     mock_query(mocker, india_alerts)
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
 
     response = client.get(
         "/api/v1/fire-alerts/summary-stats/admin/IDN/1",
+        headers={"x-api-key": "api-key-test"},
     )
 
     assert response.json["data"]["attributes"]["value"][0]["alerts"] == 28514
@@ -48,9 +53,14 @@ def test_adm1_stats(client, mocker):
 
 @requests_mock.Mocker(kw="mocker")
 def test_group_by_day(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     mock_query(mocker, fires_group_by_day_adm2)
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=day"
+        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=day",
+        headers={"x-api-key": "api-key-test"},
     )
     data = response.json["data"]["attributes"]["value"]
     # should have one result for each day between 2001-01-01 and today
@@ -67,10 +77,15 @@ def test_group_by_day(client, mocker):
 
 @requests_mock.Mocker(kw="mocker")
 def test_group_by_week(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     mock_query(mocker, fires_group_by_day_adm2)
 
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=week"
+        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=week",
+        headers={"x-api-key": "api-key-test"},
     )
     data = response.json["data"]["attributes"]["value"]
     # check that we have the correct # of weeks
@@ -87,10 +102,15 @@ def test_group_by_week(client, mocker):
 
 @requests_mock.Mocker(kw="mocker")
 def test_group_by_quarter(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     mock_query(mocker, fires_group_by_day_adm2)
 
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=quarter"
+        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=quarter",
+        headers={"x-api-key": "api-key-test"},
     )
     data = response.json["data"]["attributes"]["value"]
 
@@ -108,10 +128,15 @@ def test_group_by_quarter(client, mocker):
 
 @requests_mock.Mocker(kw="mocker")
 def test_group_by_month(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     mock_query(mocker, fires_group_by_day_adm2)
 
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=month"
+        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=month",
+        headers={"x-api-key": "api-key-test"},
     )
     data = response.json["data"]["attributes"]["value"]
     # check that we have the proper # of months
@@ -128,10 +153,15 @@ def test_group_by_month(client, mocker):
 
 @requests_mock.Mocker(kw="mocker")
 def test_group_by_year(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     mock_query(mocker, fires_group_by_day_adm2)
 
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=year"
+        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=year",
+        headers={"x-api-key": "api-key-test"},
     )
     data = response.json["data"]["attributes"]["value"]
 
@@ -149,9 +179,14 @@ def test_group_by_year(client, mocker):
 
 @requests_mock.Mocker(kw="mocker")
 def test_group_by_adm1(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     mock_query(mocker, adm2_alerts)
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=adm1"
+        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=adm1",
+        headers={"x-api-key": "api-key-test"},
     )
     data = response.json["data"]["attributes"]["value"]
 
@@ -169,9 +204,14 @@ def test_group_by_adm1(client, mocker):
 
 @requests_mock.Mocker(kw="mocker")
 def test_group_by_adm2(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     mock_query(mocker, adm2_alerts)
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=adm2"
+        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_by=adm2",
+        headers={"x-api-key": "api-key-test"},
     )
     data = response.json["data"]["attributes"]["value"]
 
@@ -189,9 +229,14 @@ def test_group_by_adm2(client, mocker):
 
 @requests_mock.Mocker(kw="mocker")
 def test_global_group_by_iso(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     mock_query(mocker, global_alerts)
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/global?aggregate_values=True&aggregate_by=iso"
+        "/api/v1/fire-alerts/summary-stats/admin/global?aggregate_values=True&aggregate_by=iso",
+        headers={"x-api-key": "api-key-test"},
     )
     data = response.json["data"]["attributes"]["value"]
 
@@ -210,9 +255,14 @@ def test_global_group_by_iso(client, mocker):
 
 @requests_mock.Mocker(kw="mocker")
 def test_global_group_by_adm1(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     mock_query(mocker, adm1_alerts)
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/global?aggregate_values=True&aggregate_by=adm1"
+        "/api/v1/fire-alerts/summary-stats/admin/global?aggregate_values=True&aggregate_by=adm1",
+        headers={"x-api-key": "api-key-test"},
     )
     data = response.json["data"]["attributes"]["value"]
 
@@ -230,9 +280,14 @@ def test_global_group_by_adm1(client, mocker):
 
 @requests_mock.Mocker(kw="mocker")
 def test_group_by_day_adm1(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     mock_query(mocker, fires_group_by_day_adm2)
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_admin=adm1&aggregate_time=day"
+        "/api/v1/fire-alerts/summary-stats/admin/IDN?aggregate_values=True&aggregate_admin=adm1&aggregate_time=day",
+        headers={"x-api-key": "api-key-test"},
     )
     data = response.json["data"]["attributes"]["value"]
     # calculate # of days 2001-01-01 to present
