@@ -1,7 +1,7 @@
 """Main Script"""
 
 import os
-from fireSummary import app
+from fireSummary.app import app
 
 
 # This is only used when running locally. When running live, Gunicorn runs

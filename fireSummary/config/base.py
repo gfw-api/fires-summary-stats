@@ -8,6 +8,7 @@ SETTINGS = {
         'level': 'DEBUG'
     },
     'service': {
-        'port': os.getenv('PORT')
+        'port': os.getenv('PORT'),
+        'name': 'Fires Summary Stats'
     }
 }

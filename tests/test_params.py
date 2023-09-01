@@ -1,9 +1,19 @@
 import datetime
+import os
+
+import requests_mock
+from RWAPIMicroservicePython.test_utils import mock_request_validation
 
 
-def test_quotes_in_period(client):
+@requests_mock.Mocker(kw="mocker")
+def test_quotes_in_period(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     response = client.get(
-        '/api/v1/fire-alerts/summary-stats/admin/IDN?period="2013-01-01,2014-01-01"'
+        '/api/v1/fire-alerts/summary-stats/admin/IDN?period="2013-01-01,2014-01-01"',
+        headers={"x-api-key": "api-key-test"},
     )
 
     assert response.status_code == 400
@@ -13,9 +23,15 @@ def test_quotes_in_period(client):
     )
 
 
-def test_bogus_period(client):
+@requests_mock.Mocker(kw="mocker")
+def test_bogus_period(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/IDN?period=2016-01-01,2013-01-01"
+        "/api/v1/fire-alerts/summary-stats/admin/IDN?period=2016-01-01,2013-01-01",
+        headers={"x-api-key": "api-key-test"},
     )
 
     assert response.status_code == 400
@@ -24,18 +40,30 @@ def test_bogus_period(client):
     )
 
 
-def test_one_period(client):
+@requests_mock.Mocker(kw="mocker")
+def test_one_period(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/IDN?period=2016-01-01"
+        "/api/v1/fire-alerts/summary-stats/admin/IDN?period=2016-01-01",
+        headers={"x-api-key": "api-key-test"},
     )
 
     assert response.status_code == 400
     assert response.json["errors"][0]["detail"] == "Period needs 2 arguments"
 
 
-def test_wrong_period(client):
+@requests_mock.Mocker(kw="mocker")
+def test_wrong_period(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/IDN?period=2016-30-01,2016-01-01"
+        "/api/v1/fire-alerts/summary-stats/admin/IDN?period=2016-30-01,2016-01-01",
+        headers={"x-api-key": "api-key-test"},
     )
 
     assert response.status_code == 400
@@ -45,9 +73,15 @@ def test_wrong_period(client):
     )
 
 
-def test_early_period(client):
+@requests_mock.Mocker(kw="mocker")
+def test_early_period(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/IDN?period=1999-01-01,2016-01-01"
+        "/api/v1/fire-alerts/summary-stats/admin/IDN?period=1999-01-01,2016-01-01",
+        headers={"x-api-key": "api-key-test"},
     )
 
     assert response.status_code == 400
@@ -57,9 +91,15 @@ def test_early_period(client):
     )
 
 
+@requests_mock.Mocker(kw="mocker")
 def test_late_period(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/admin/IDN?period=2013-01-01,2025-01-01"
+        "/api/v1/fire-alerts/summary-stats/admin/IDN?period=2013-01-01,2025-01-01",
+        headers={"x-api-key": "api-key-test"},
     )
 
     assert response.status_code == 400
@@ -69,8 +109,16 @@ def test_late_period(client, mocker):
     ] == "End year can't be later than {}".format(today.year)
 
 
-def test_bad_global(client):
-    response = client.get("/api/v1/fire-alerts/summary-stats/wdpa/global/1")
+@requests_mock.Mocker(kw="mocker")
+def test_bad_global(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
+    response = client.get(
+        "/api/v1/fire-alerts/summary-stats/wdpa/global/1",
+        headers={"x-api-key": "api-key-test"},
+    )
 
     assert response.status_code == 400
     assert (
@@ -80,11 +128,17 @@ def test_bad_global(client):
     )
 
 
+@requests_mock.Mocker(kw="mocker")
 def test_bad_global_agg(client, mocker):
+    mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
     agg_list = ["day", "week", "quarter", "month", "year", "adm1", "iso"]
 
     response = client.get(
-        "/api/v1/fire-alerts/summary-stats/wdpa/global?aggregate_values=True&aggregate_by=adm2"
+        "/api/v1/fire-alerts/summary-stats/wdpa/global?aggregate_values=True&aggregate_by=adm2",
+        headers={"x-api-key": "api-key-test"},
     )
 
     assert response.status_code == 400
