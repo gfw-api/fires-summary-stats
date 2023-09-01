@@ -1,7 +1,5 @@
-import sys
-
 from functools import wraps
-from utils import util
+from .utils import util
 
 
 def valid_input_boundaries(func):
