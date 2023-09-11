@@ -41,20 +41,15 @@ spec:
               value: prod
             - name: LOCAL_URL
               value: http://fires-summary-stats.default.svc.cluster.local:5700
-            - name: CT_URL
+            - name: GATEWAY_URL
               valueFrom:
                 secretKeyRef:
-                  key: CT_URL
+                  key: GATEWAY_URL
                   name: mssecrets
-            - name: CT_TOKEN
+            - name: MICROSERVICE_TOKEN
               valueFrom:
                 secretKeyRef:
-                  key: CT_TOKEN
-                  name: mssecrets
-            - name: CT_REGISTER_MODE
-              valueFrom:
-                secretKeyRef:
-                  key: CT_REGISTER_MODE
+                  key: MICROSERVICE_TOKEN
                   name: mssecrets
             - name: API_VERSION
               valueFrom:
@@ -65,6 +60,16 @@ spec:
               value: 4145f642-5455-4414-b214-58ad39b83e1e
             - name: GLAD_DATASET_ID
               value: 63e88e53-0a88-416e-9532-fa06f703d435
+            - name: AWS_REGION
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_REGION
+                  name: mssecrets
+            - name: REQUIRE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: REQUIRE_API_KEY
+                  name: mssecrets
           image: gfwdockerhub/fires-summary-stats
           imagePullPolicy: Always
           name: fires-summary-stats
