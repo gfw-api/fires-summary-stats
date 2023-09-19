@@ -51,11 +51,6 @@ spec:
                 secretKeyRef:
                   key: MICROSERVICE_TOKEN
                   name: mssecrets
-            - name: API_VERSION
-              valueFrom:
-                secretKeyRef:
-                  key: API_VERSION
-                  name: mssecrets
             - name: FIRES_DATASET_ID
               value: 4145f642-5455-4414-b214-58ad39b83e1e
             - name: GLAD_DATASET_ID

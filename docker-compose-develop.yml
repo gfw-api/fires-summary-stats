@@ -8,7 +8,6 @@ services:
     environment:
       ENVIRONMENT: dev
       DEBUG: "True"
-      API_VERSION: v1
       AWS_REGION: "us-east-1"
       REQUIRE_API_KEY: "True"
       AWS_CLOUD_WATCH_LOGGING_ENABLED: "False"
