@@ -1,4 +1,4 @@
-Flask==2.3.2
+Flask==3.1.3
 RWAPIMicroservicePython==3.0.0
 requests~=2.22.0
 httmock~=1.3.0
